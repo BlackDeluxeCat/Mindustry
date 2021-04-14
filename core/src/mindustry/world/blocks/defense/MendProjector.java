@@ -10,6 +10,7 @@ import mindustry.content.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.logic.*;
+import mindustry.ui.*;
 import mindustry.world.*;
 import mindustry.world.meta.*;
 
@@ -50,6 +51,12 @@ public class MendProjector extends Block{
 
         stats.add(Stat.boostEffect, phaseRangeBoost / tilesize, StatUnit.blocks);
         stats.add(Stat.boostEffect, (phaseBoost + healPercent) / healPercent, StatUnit.timesSpeed);
+    }
+
+    @Override
+    public void setBars(){
+        super.setBars();
+        bars.add("charge", (MendBuild entity) -> new Bar(() -> ("Charge: " + (int)entity.charge + " / " + reload), () -> Pal.items, () -> (entity.charge / reload)));
     }
 
     @Override

@@ -152,7 +152,16 @@ public class UnitType extends UnlockableContent{
 
     }
 
-    public void landed(Unit unit){}
+    public void landed(Unit unit){
+
+    }
+    //info % status
+    public void displayStatus(Unit unit, Table bars){
+        bars.add(new Bar(() -> "Hp:" + unit.healthMultiplier() + " Dmg:" + unit.damageMultiplier() + " Sp:" + unit.speedMultiplier(),() -> Pal.accent, () -> 1f));
+        bars.row();
+        bars.add(new Bar(() -> "S:" + unit.shield() + " A:" + unit.armor() + (unit.isBoss() ? " (Boss)" : ""), () -> Pal.accent, () -> 1f));
+        bars.row();
+    }
 
     public void display(Unit unit, Table table){
         table.table(t -> {
@@ -165,12 +174,12 @@ public class UnitType extends UnlockableContent{
         table.table(bars -> {
             bars.defaults().growX().height(20f).pad(4);
             bars.add(new Bar(() -> {
-                return unit.health + " / " +unit.maxHealth + " (" + (int)(100 * unit.health / unit.maxHealth) + "%)";
+                return unit.health + " / " + unit.maxHealth + " (" + (int)(100 * unit.health / unit.maxHealth) + "%)";
             }, () -> Pal.health, unit::healthf).blink(Color.white));
             bars.row();
 
             if(state.rules.unitAmmo){
-                bars.add(new Bar(ammoType.icon + " " + Core.bundle.get("stat.ammo") + unit.ammo + "/" + ammoCapacity, ammoType.barColor, () -> unit.ammo / ammoCapacity));
+                bars.add(new Bar(() -> ammoType.icon + " " + Core.bundle.get("stat.ammo") + (int)unit.ammo + " / " + ammoCapacity, () -> ammoType.barColor, () -> unit.ammo / ammoCapacity));
                 bars.row();
             }
 
@@ -190,6 +199,10 @@ public class UnitType extends UnlockableContent{
                     }
                 }).growX().left().height(0f).pad(0f);
             }
+            displayStatus(unit, bars);
+
+            
+
         }).growX();
 
         if(unit.controller() instanceof LogicAI){

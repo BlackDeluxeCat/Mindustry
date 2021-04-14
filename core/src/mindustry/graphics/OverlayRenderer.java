@@ -165,6 +165,10 @@ public class OverlayRenderer{
             Drawf.square(build.x, build.y, build.block.size * tilesize/2f + 2f);
             if(!unit.within(build, unit.hitSize * 2f)){
                 Drawf.arrow(unit.x, unit.y, build.x, build.y, unit.hitSize *2f, 4f);
+                //add a line aim at processor
+                Draw.color(Pal.accent);
+                Lines.line(unit.x, unit.y, build.x, build.y);
+                Draw.color();
             }
         }
 

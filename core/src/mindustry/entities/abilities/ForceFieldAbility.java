@@ -98,7 +98,7 @@ public class ForceFieldAbility extends Ability{
 
     @Override
     public void displayBars(Unit unit, Table bars){
-        bars.add(new Bar("stat.shieldhealth", Pal.accent, () -> unit.shield / max)).row();
+        bars.add(new Bar(() -> "Shield: " + (int)unit.shield + " / " + max, () -> Pal.accent, () -> unit.shield / max)).row();
     }
 
     public void checkRadius(Unit unit){
