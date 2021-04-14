@@ -37,6 +37,7 @@ public class HudFragment extends Fragment{
 
     private ImageButton flip;
     private CoreItemsDisplay coreItems = new CoreItemsDisplay();
+    private OtherCoreItemDisplay otherCoreItemDisplay = new OtherCoreItemDisplay(); //shugen002's display
 
     private String hudText = "";
     private boolean showHudText;
@@ -84,6 +85,10 @@ public class HudFragment extends Fragment{
         Events.on(ResetEvent.class, e -> {
             coreItems.resetUsed();
             coreItems.clear();
+        });
+
+        Events.on(WorldLoadEvent.class,e->{
+            otherCoreItemDisplay.updateTeamList();
         });
 
         //paused table
@@ -267,6 +272,16 @@ public class HudFragment extends Fragment{
             t.name = "coreitems";
             t.top().add(coreItems);
             t.visible(() -> Core.settings.getBool("coreitems") && !mobile && !state.isPaused() && shown);
+        });
+
+        //other core items by shugen002
+        parent.fill(t -> {
+            t.name = "otherCore";
+            t.right().add(otherCoreItemDisplay);
+            t.visible(() -> Core.settings.getBool("cheat.showOtherTeamResource", false)
+            && shown
+            && player != null && player.team() != null
+            );
         });
 
         //spawner warning

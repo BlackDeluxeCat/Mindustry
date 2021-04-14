@@ -94,7 +94,7 @@ allprojects{
         }
 
         getBuildVersion = {
-            if(!project.hasProperty("buildversion")) return "custom build"
+            if(!project.hasProperty("buildversion")) return "126.2"
             return project.getProperties()["buildversion"]
         }
 

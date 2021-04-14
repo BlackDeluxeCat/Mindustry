@@ -35,6 +35,7 @@ public class SettingsMenuDialog extends SettingsDialog{
     public SettingsTable graphics;
     public SettingsTable game;
     public SettingsTable sound;
+    public SettingsTable cheat;
 
     private Table prefs;
     private Table menu;
@@ -74,6 +75,7 @@ public class SettingsMenuDialog extends SettingsDialog{
         game = new SettingsTable();
         graphics = new SettingsTable();
         sound = new SettingsTable();
+        cheat = new SettingsTable();
 
         prefs = new Table();
         prefs.top();
@@ -279,6 +281,8 @@ public class SettingsMenuDialog extends SettingsDialog{
         menu.button("@settings.sound", style, () -> visible(2));
         menu.row();
         menu.button("@settings.language", style, ui.language::show);
+        menu.row();
+        menu.button("@settings.cheat", style, () -> visible(3));
         if(!mobile || Core.settings.getBool("keyboard")){
             menu.row();
             menu.button("@settings.controls", style, ui.controls::show);
@@ -447,6 +451,13 @@ public class SettingsMenuDialog extends SettingsDialog{
         }
 
         graphics.checkPref("flow", true);
+
+
+
+        //custom settings
+        cheat.checkPref("cheat.showOtherTeamResource",false);
+        cheat.sliderPref("cheat.maxSchematicSize",32,32,500, String::valueOf);
+        cheat.sliderPref("minimapSize", 140, 40, 400, 10, i -> i + "");
     }
 
     public void exportData(Fi file) throws IOException{
@@ -515,7 +526,7 @@ public class SettingsMenuDialog extends SettingsDialog{
 
     private void visible(int index){
         prefs.clearChildren();
-        prefs.add(new Table[]{game, graphics, sound}[index]);
+        prefs.add(new Table[]{game, graphics, sound, cheat}[index]);
     }
 
     @Override

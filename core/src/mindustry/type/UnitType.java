@@ -164,12 +164,13 @@ public class UnitType extends UnlockableContent{
 
         table.table(bars -> {
             bars.defaults().growX().height(20f).pad(4);
-
-            bars.add(new Bar("stat.health", Pal.health, unit::healthf).blink(Color.white));
+            bars.add(new Bar(() -> {
+                return unit.health + " / " +unit.maxHealth + " (" + (int)(100 * unit.health / unit.maxHealth) + "%)";
+            }, () -> Pal.health, unit::healthf).blink(Color.white));
             bars.row();
 
             if(state.rules.unitAmmo){
-                bars.add(new Bar(ammoType.icon + " " + Core.bundle.get("stat.ammo"), ammoType.barColor, () -> unit.ammo / ammoCapacity));
+                bars.add(new Bar(ammoType.icon + " " + Core.bundle.get("stat.ammo") + unit.ammo + "/" + ammoCapacity, ammoType.barColor, () -> unit.ammo / ammoCapacity));
                 bars.row();
             }
 

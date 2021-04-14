@@ -42,6 +42,8 @@ public class Vars implements Loadable{
     public static boolean experimental = false;
     /** Name of current Steam player. */
     public static String steamPlayerName = "";
+    /** Minimap size.*/
+    public static final int minimapSize = 40;
     /** Maximum extra padding around deployment schematics. */
     public static final int maxLoadoutSchematicPad = 5;
     /** Maximum schematic size.*/
@@ -426,5 +428,11 @@ public class Vars implements Loadable{
                 bundle.debug("router");
             }
         }
+    }
+    public static int getMaxSchematicSize(){
+        return  settings.getInt("cheat.maxSchematicSize",maxSchematicSize);
+    }
+    public static int getMinimapSize(){
+        return settings.getInt("minimapsize",minimapSize);
     }
 }

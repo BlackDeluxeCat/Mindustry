@@ -29,7 +29,7 @@ public class MapGenerateDialog extends BaseDialog{
     private final Prov<GenerateFilter>[] filterTypes = new Prov[]{
         NoiseFilter::new, ScatterFilter::new, TerrainFilter::new, DistortFilter::new,
         RiverNoiseFilter::new, OreFilter::new, OreMedianFilter::new, MedianFilter::new,
-        BlendFilter::new, MirrorFilter::new, ClearFilter::new, CoreSpawnFilter::new,
+        BlendFilter::new, MirrorFilter::new, PointSymmetryFilter::new, ClearFilter::new, CoreSpawnFilter::new,
         EnemySpawnFilter::new, SpawnPathFilter::new
     };
     private final MapEditor editor;
