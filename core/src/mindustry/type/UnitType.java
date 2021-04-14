@@ -198,6 +198,7 @@ public class UnitType extends UnlockableContent{
                         count[0] = payload.payloadUsed();
                     }
                 }).growX().left().height(0f).pad(0f);
+                bars.row();
             }
             displayStatus(unit, bars);
 
