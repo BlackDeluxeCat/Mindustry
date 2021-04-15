@@ -5,6 +5,7 @@ import arc.func.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
+import arc.math.geom.*;
 import arc.scene.*;
 import arc.scene.actions.*;
 import arc.scene.event.*;
@@ -14,8 +15,10 @@ import arc.scene.ui.ImageButton.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
+import mindustry.*;
 import mindustry.annotations.Annotations.*;
 import mindustry.content.*;
+import mindustry.core.*;
 import mindustry.core.GameState.*;
 import mindustry.ctype.*;
 import mindustry.game.EventType.*;
@@ -110,6 +113,11 @@ public class HudFragment extends Fragment{
             .visible(() -> Core.settings.getBool("position"))
             .touchable(Touchable.disabled)
             .name("position");
+            t.row();
+            t.label(() -> {
+            Vec2 pos = Core.input.mouseWorld(Core.input.mouseX(), Core.input.mouseY());
+            return World.toTile(pos.x) + "," + World.toTile(pos.y);
+            });
             t.top().right();
         });
 
@@ -277,7 +285,7 @@ public class HudFragment extends Fragment{
         //other core items by shugen002
         parent.fill(t -> {
             t.name = "otherCore";
-            t.right().add(otherCoreItemDisplay);
+            t.left().add(otherCoreItemDisplay);
             t.visible(() -> Core.settings.getBool("cheat.showOtherTeamResource", false)
             && shown
             && player != null && player.team() != null

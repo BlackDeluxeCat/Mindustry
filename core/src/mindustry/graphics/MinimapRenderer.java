@@ -56,7 +56,7 @@ public class MinimapRenderer{
     }
 
     public void setZoom(float amount){
-        zoom = Mathf.clamp(amount, 1f, Math.min(world.width(), world.height()) / baseSize / 2f);
+        zoom = Mathf.clamp(amount, 1f, Math.max(world.width(), world.height()) / baseSize / 2f);
     }
 
     public float getZoom(){
@@ -94,9 +94,9 @@ public class MinimapRenderer{
             float rx = !withLabels ? (unit.x - rect.x) / rect.width * w : unit.x / (world.width() * tilesize) * w;
             float ry = !withLabels ? (unit.y - rect.y) / rect.width * h : unit.y / (world.height() * tilesize) * h;
 
-            Draw.mixcol(unit.team().color, 1f);
             float scale = Scl.scl(1f) / 2f * scaling * 32f;
             var region = unit.type.icon(Cicon.full);
+            Draw.mixcol(new Color(unit.team().color.r * 0.95f, unit.team().color.g * 0.95f, unit.team().color.b * 0.5f, 1f), 1f);
             Draw.rect(region, x + rx, y + ry, scale, scale * (float)region.height / region.width, unit.rotation() - 90);
             Draw.reset();
         }

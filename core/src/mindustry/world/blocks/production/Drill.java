@@ -91,7 +91,9 @@ public class Drill extends Block{
 
         bars.add("drillspeed", (DrillBuild e) ->
              new Bar(() -> Core.bundle.format("bar.drillspeed", Strings.fixed(e.lastDrillSpeed * 60 * e.timeScale, 2)), () -> Pal.ammo, () -> e.warmup));
-    }
+        bars.add("drillcharge", (DrillBuild e) ->
+            new Bar(() -> Core.bundle.format("bar.drillprogress", Strings.fixed(e.progress * 100 / (drillTime + hardnessDrillMultiplier * e.dominantItem.hardness), 0)), () -> Pal.ammo, () -> e.progress / (drillTime + hardnessDrillMultiplier * e.dominantItem.hardness)));
+    };
 
     public Item getDrop(Tile tile){
         return tile.drop();

@@ -1,6 +1,8 @@
 package mindustry.world.blocks.production;
 
+import arc.*;
 import arc.graphics.g2d.*;
+import arc.scene.ui.layout.*;
 import arc.math.*;
 import arc.struct.*;
 import arc.util.*;
@@ -8,7 +10,9 @@ import arc.util.io.*;
 import mindustry.content.*;
 import mindustry.entities.*;
 import mindustry.gen.*;
+import mindustry.graphics.*;
 import mindustry.type.*;
+import mindustry.ui.*;
 import mindustry.world.*;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
@@ -153,6 +157,14 @@ public class GenericCrafter extends Block{
             super.read(read, revision);
             progress = read.f();
             warmup = read.f();
+        }
+
+        @Override
+        public void displayBars(Table bars){
+            super.displayBars(bars);
+            //bar for shoot cd
+            bars.add(new Bar(() -> Core.bundle.format("bar.craftprogress", Strings.fixed(progress * 100f, 0)), () -> Pal.ammo, () -> progress));
+            bars.row();
         }
     }
 }

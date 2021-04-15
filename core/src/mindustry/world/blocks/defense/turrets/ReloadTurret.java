@@ -1,8 +1,19 @@
 package mindustry.world.blocks.defense.turrets;
 
+import arc.*;
 import arc.math.*;
+import arc.scene.ui.layout.*;
+import arc.struct.*;
 import arc.util.*;
+import arc.util.io.*;
+import mindustry.*;
+import mindustry.content.*;
+import mindustry.entities.bullet.*;
+import mindustry.game.EventType.*;
+import mindustry.gen.*;
+import mindustry.graphics.*;
 import mindustry.type.*;
+import mindustry.ui.*;
 import mindustry.world.consumers.*;
 import mindustry.world.meta.*;
 import mindustry.world.meta.values.*;
@@ -44,6 +55,14 @@ public class ReloadTurret extends BaseTurret{
 
         protected float baseReloadSpeed(){
             return efficiency();
+        }
+
+        @Override
+        public void displayBars(Table bars){
+            super.displayBars(bars);
+            //bar for shoot cd
+            bars.add(new Bar(() -> Core.bundle.format("stat.reload", (int)(reload * 100 / reloadTime)), () -> Pal.ammo, () -> (float)(reload / reloadTime)));
+            bars.row();
         }
     }
 }
