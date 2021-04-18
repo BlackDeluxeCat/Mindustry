@@ -36,10 +36,10 @@ public class PlacementFragment extends Fragment{
     ObjectMap<Category,Block> selectedBlocks = new ObjectMap<>();
     ObjectFloatMap<Category> scrollPositions = new ObjectFloatMap<>();
     Block menuHoverBlock;
-    Displayable hover;
+    Displayable hover, hover2;
     Object lastDisplayState;
     boolean wasHovered;
-    Table blockTable, toggler, topTable;
+    Table blockTable, toggler, topTable, topTable2;
     ScrollPane blockPane;
     boolean blockSelectEnd;
     int blockSelectSeq;
@@ -277,6 +277,7 @@ public class PlacementFragment extends Fragment{
 
                         //find current hovered thing
                         Displayable hovered = hover;
+                        Displayable hovered2 = hover2;
                         Block displayBlock = menuHoverBlock != null ? menuHoverBlock : control.input.block;
                         Object displayState = displayBlock != null ? displayBlock : hovered;
                         boolean isHovered = displayBlock == null; //use hovered thing if displayblock is null
@@ -357,6 +358,25 @@ public class PlacementFragment extends Fragment{
                         }else if(hovered != null){
                             //show hovered item, whatever that may be
                             hovered.display(topTable);
+                            if(hovered2 != hovered && hovered2 != null){
+                                topTable.row();
+                                topTable.row();
+                                hovered2.display(topTable);
+                                /*
+                                topTable.table(Tex.buttonEdge2, top2 -> {
+                                    topTable2 = top2;
+                                    top2.add(new Table()).growX().update(topTable2 -> {
+                                        //find current hovered *block*
+                                        Displayable hovered2temp = hover2;
+
+                                        topTable2.clear();
+                                        topTable2.top().left().margin(5);
+                                        if(hovered2temp != null) hovered2temp.display(topTable2);
+                                    });
+                                });
+                                */
+                            }
+                            //topTable2 display when hover has a unit and hover2 has a block
                         }
                     });
                 }).colspan(3).fillX().visible(this::hasInfoBox).touchable(Touchable.enabled);
@@ -445,6 +465,7 @@ public class PlacementFragment extends Fragment{
 
     boolean hasInfoBox(){
         hover = hovered();
+        hover2 = hoveredblock();
         return control.input.block != null || menuHoverBlock != null || hover != null;
     }
 
@@ -464,6 +485,32 @@ public class PlacementFragment extends Fragment{
         //accurate hover
         if(unit2 != null) return unit2;
         if(unit1 != null) return unit1;
+        //check tile being hovered over
+        Tile hoverTile = world.tileWorld(Core.input.mouseWorld().x, Core.input.mouseWorld().y);
+        if(hoverTile != null){
+            //if the tile has a building, display it
+            if(hoverTile.build != null){
+                hoverTile.build.updateFlow = true;
+                return hoverTile.build;
+            }
+
+            //if the tile has a drop, display the drop
+            if(hoverTile.drop() != null){
+                return hoverTile;
+            }
+        }
+
+        return null;
+    }
+
+    //for block hover sense and block info display (MI2)
+    @Nullable
+    Displayable hoveredblock(){
+        Vec2 v = topTable.stageToLocalCoordinates(Core.input.mouse());
+
+        //if the mouse intersects the table or the UI has the mouse, no hovering can occur
+        if(Core.scene.hasMouse() || topTable.hit(v.x, v.y, false) != null) return null;
+
         //check tile being hovered over
         Tile hoverTile = world.tileWorld(Core.input.mouseWorld().x, Core.input.mouseWorld().y);
         if(hoverTile != null){

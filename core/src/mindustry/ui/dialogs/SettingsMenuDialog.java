@@ -457,7 +457,21 @@ public class SettingsMenuDialog extends SettingsDialog{
         //custom settings
         cheat.checkPref("cheat.showOtherTeamResource",false);
         cheat.sliderPref("cheat.maxSchematicSize",32,32,500, String::valueOf);
-        cheat.sliderPref("minimapSize", 140, 40, 400, 10, i -> i + "");
+        
+        graphics.sliderPref("minimapSize", 140, 40, 400, 10, i -> i + "");
+        graphics.sliderPref("minimapUnitTeamColorTransparency",100,0,100,1, i -> i + "%");
+        graphics.checkPref("unitHealthBar", true);
+        graphics.checkPref("unitPathLine", true);
+        graphics.sliderPref("unitPathLineLength", 64, 0, 512, 1, i -> i + "Tiles");
+        graphics.sliderPref("unitPathLineStroke", 2, 1, 10, 1, i -> i + "Pixel(s)");
+        graphics.checkPref("unitLogicControllerLine", true);
+        graphics.checkPref("unitLogicMoveLine", true);
+        graphics.checkPref("unitLogicTimerBars", true);
+        graphics.checkPref("unitWeaponTargetLine", true);
+        graphics.sliderPref("unitTransparency",100,0,100,10, i -> i + "%");
+        graphics.sliderPref("unitLegTransparency",100,0,100,10, i -> i + "%");
+        graphics.checkPref("blockWeaponTargetLine", true);
+        graphics.checkPref("blockWeaponTargetLineWhenIdle", true);
     }
 
     public void exportData(Fi file) throws IOException{

@@ -224,10 +224,21 @@ public class Turret extends ReloadTurret{
         @Override
         public void draw(){
             Draw.rect(baseRegion, x, y);
-            Draw.color();
-
             Draw.z(Layer.turret);
-
+            if(targetPos.x !=0 && targetPos.y != 0 && Core.settings.getBool("blockWeaponTargetLine")){
+                if(isShooting()){
+                Draw.color(1f, 0.2f, 0.2f, 0.5f);
+                Lines.stroke(1.5f);
+                Lines.dashLine(x, y, targetPos.x, targetPos.y, (int)(Mathf.len(targetPos.x - x, targetPos.y - y) / 8));
+                Lines.dashCircle(targetPos.x, targetPos.y, 8);
+                } else if(Core.settings.getBool("blockWeaponTargetLineWhenIdle")){
+                Draw.color(1f, 1f, 1f, 0.3f);
+                Lines.stroke(1.5f);
+                Lines.dashLine(x, y, targetPos.x, targetPos.y, (int)(Mathf.len(targetPos.x - x, targetPos.y - y) / 8));
+                Lines.dashCircle(targetPos.x, targetPos.y, 8);
+                }
+            }
+            Draw.color();
             tr2.trns(rotation, -recoil);
 
             Drawf.shadow(region, x + tr2.x - elevation, y + tr2.y - elevation, rotation - 90);
@@ -235,6 +246,18 @@ public class Turret extends ReloadTurret{
 
             if(heatRegion != Core.atlas.find("error")){
                 heatDrawer.get(this);
+            }
+        }
+
+        //show shoot target line
+        @Override
+        public void drawSelect(){
+            super.drawSelect();
+            if(targetPos.x != 0 && targetPos.y !=0){
+                Lines.stroke(1f);
+                Lines.dashLine(x, y, targetPos.x, targetPos.y, (int)(Mathf.len(targetPos.x - x, targetPos.y - y) / 8));
+                Lines.dashCircle(targetPos.x, targetPos.y, 8);
+                Draw.reset();
             }
         }
 

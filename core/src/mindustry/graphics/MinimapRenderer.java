@@ -10,6 +10,7 @@ import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.pooling.*;
+import mindustry.*;
 import mindustry.entities.*;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
@@ -96,7 +97,8 @@ public class MinimapRenderer{
 
             float scale = Scl.scl(1f) / 2f * scaling * 32f;
             var region = unit.type.icon(Cicon.full);
-            Draw.mixcol(new Color(unit.team().color.r * 0.95f, unit.team().color.g * 0.95f, unit.team().color.b * 0.5f, 1f), 1f);
+            //color difference between block and unit in setting
+            Draw.mixcol(new Color(unit.team().color.r * ((float)Core.settings.getInt("minimapUnitTeamColorTransparency") / 100f), unit.team().color.g * ((float)Core.settings.getInt("minimapUnitTeamColorTransparency") / 100f), unit.team().color.b * ((float)Core.settings.getInt("minimapUnitTeamColorTransparency") / 100f), 1f), 1f);
             Draw.rect(region, x + rx, y + ry, scale, scale * (float)region.height / region.width, unit.rotation() - 90);
             Draw.reset();
         }

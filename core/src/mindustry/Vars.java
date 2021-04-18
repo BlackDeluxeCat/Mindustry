@@ -433,6 +433,6 @@ public class Vars implements Loadable{
         return  settings.getInt("cheat.maxSchematicSize",maxSchematicSize);
     }
     public static int getMinimapSize(){
-        return settings.getInt("minimapsize",minimapSize);
+        return settings.getInt("minimapSize",minimapSize);
     }
 }

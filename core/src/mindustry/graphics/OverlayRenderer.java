@@ -7,7 +7,9 @@ import arc.math.*;
 import arc.math.geom.*;
 import arc.util.*;
 import mindustry.*;
+import mindustry.ai.*;
 import mindustry.ai.types.*;
+import mindustry.entities.units.UnitCommand;
 import mindustry.gen.*;
 import mindustry.input.*;
 import mindustry.ui.*;
@@ -144,12 +146,14 @@ public class OverlayRenderer{
             Vec2 vec = Core.input.mouseWorld(input.getMouseX(), input.getMouseY());
             Building build = world.buildWorld(vec.x, vec.y);
 
-            if(build != null && build.team == player.team()){
+            //delete team check
+            if(build != null){
                 build.drawSelect();
                 if(!build.enabled && build.block.drawDisabled){
                    build.drawDisabled();
                 }
-
+            }
+            if(build != null && build.team == player.team()){
                 if(Core.input.keyDown(Binding.rotateplaced) && build.block.rotate && build.block.quickRotate && build.interactable(player.team())){
                     control.input.drawArrow(build.block, build.tileX(), build.tileY(), build.rotation, true);
                     Draw.color(Pal.accent, 0.3f + Mathf.absin(4f, 0.2f));
@@ -166,9 +170,11 @@ public class OverlayRenderer{
             if(!unit.within(build, unit.hitSize * 2f)){
                 Drawf.arrow(unit.x, unit.y, build.x, build.y, unit.hitSize *2f, 4f);
                 //add a line aim at processor
-                Draw.color(Pal.accent);
-                Lines.line(unit.x, unit.y, build.x, build.y);
-                Draw.color();
+                if(Core.settings.getBool("unitLogicControllerLine")){
+                    Draw.color(Pal.accent);
+                    Lines.line(unit.x, unit.y, build.x, build.y);
+                    Draw.color();
+                }
             }
         }
 
@@ -190,6 +196,27 @@ public class OverlayRenderer{
                 Draw.reset();
 
             }
+        }
+
+        if(ui.hudfrag.blockfrag.hover() instanceof Unit unit && Core.settings.getInt("unitPathLineLength") > 0){
+            Draw.z(Layer.power - 4f);
+            Tile tile = unit.tileOn();
+            Draw.reset();
+            for(int tileIndex = 1; tileIndex <= Core.settings.getInt("unitPathLineLength"); tileIndex++){
+                Tile nextTile = pathfinder.getTargetTile(tile, pathfinder.getField(unit.team, unit.pathType(), (unit.team.data().command == UnitCommand.attack)? Pathfinder.fieldCore : Pathfinder.fieldRally));
+                if(nextTile == null) break;
+                Lines.stroke(Core.settings.getInt("unitPathLineStroke"));
+                if(nextTile == tile){
+                    Draw.color(unit.team.color, Color.black, Mathf.absin(Time.time, 4f, 1f));
+                    Lines.poly(unit.x, unit.y, 6, unit.hitSize());
+                    break;
+                }
+                Draw.color(unit.team.color, Color.lightGray, Mathf.absin(Time.time, 4f, 1f));
+                Lines.dashLine(tile.worldx(), tile.worldy(), nextTile.worldx(), nextTile.worldy(), (int)(Mathf.len(nextTile.worldx() - tile.worldx(), nextTile.worldy() - tile.worldy()) / 4f));
+                //Fill.poly(nextTile.worldx(), nextTile.worldy(), 4, tilesize - 2, 90);
+                tile = nextTile;
+            }
+            Draw.reset();
         }
     }
 }

@@ -12,6 +12,7 @@ import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
 import mindustry.*;
+import mindustry.ai.*;
 import mindustry.ai.types.*;
 import mindustry.annotations.Annotations.*;
 import mindustry.content.*;
@@ -20,6 +21,7 @@ import mindustry.ctype.*;
 import mindustry.entities.*;
 import mindustry.entities.abilities.*;
 import mindustry.entities.units.*;
+import mindustry.entities.comp.*;
 import mindustry.game.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
@@ -33,6 +35,8 @@ import mindustry.world.meta.*;
 import mindustry.world.meta.values.*;
 
 import static mindustry.Vars.*;
+
+import java.nio.IntBuffer;
 
 public class UnitType extends UnlockableContent{
     public static final float shadowTX = -12, shadowTY = -13, outlineSpace = 0.01f;
@@ -167,7 +171,7 @@ public class UnitType extends UnlockableContent{
         table.table(t -> {
             t.left();
             t.add(new Image(icon(Cicon.medium))).size(8 * 4).scaling(Scaling.fit);
-            t.labelWrap(localizedName).left().width(190f).padLeft(5);
+            t.labelWrap("[#" + unit.team.color + "]" + localizedName).left().width(190f).padLeft(5);
         }).growX().left();
         table.row();
 
@@ -509,6 +513,87 @@ public class UnitType extends UnlockableContent{
 
             Draw.reset();
         }
+
+        //display healthbar by MI2
+        Draw.z(Layer.shields + 6f);
+        if(Core.settings.getBool("unitHealthBar")){
+            Draw.reset();
+            Lines.stroke(2f);
+            Draw.color(Pal.health, 0.3f);            
+            Lines.line(unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 1.5f), unit.x + unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 1.5f));
+            Draw.color(Pal.health, 0.8f);
+            Lines.line(unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 1.5f), unit.x + unit.hitSize() * (Mathf.maxZero(unit.health) * 1.2f / unit.maxHealth - 0.6f), unit.y + (unit.hitSize() / 1.5f));
+            Lines.stroke(2f);
+            if(unit.shield > 0){
+                for(int didgt = 1; didgt <= Mathf.digits((int)(unit.shield / unit.maxHealth)) + 1; didgt++){
+                    Draw.color(Pal.shield, 0.8f);
+                    Lines.line(unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 1.5f) + (float)didgt * 2f, unit.x + unit.hitSize() * (Mathf.mod(unit.shield, unit.maxHealth * Mathf.pow(10f, (float)didgt - 1f)) / (unit.maxHealth * Mathf.pow(10f, (float)didgt - 1f)) * 1.2f - 0.6f), unit.y + (unit.hitSize() / 1.5f) + (float)didgt * 2f);
+                }
+            }
+            Draw.reset();
+            
+            float index = 0f;
+            for(StatusEffect eff : Vars.content.statusEffects()){
+                if(unit.hasEffect(eff)){
+                    float iconSize = Mathf.ceil(unit.hitSize() / 4f);
+                    Draw.rect(eff.icon(Cicon.small),unit.x - unit.hitSize() * 0.6f + 0.5f * iconSize * Mathf.mod(index, 4f), unit.y + (unit.hitSize() / 1.5f) + iconSize * 0.5f + iconSize * Mathf.floor(index / 4f) + 2f, 4f, 4f);
+                    index++;
+                }
+            }
+        }
+
+        //display logicAI info by MI2
+        if(unit.controller() instanceof LogicAI logicai){
+            Draw.reset();
+            if(Core.settings.getBool("unitLogicMoveLine")){
+                Lines.stroke(1f);
+                Draw.color(0.2f, 0.2f, 1f, 0.9f);
+                Lines.dashLine(unit.x, unit.y, logicai.moveX, logicai.moveY, (int)(Mathf.len(logicai.moveX - unit.x, logicai.moveY - unit.y) / 8));
+                Lines.dashCircle(logicai.moveX, logicai.moveY, logicai.moveRad);
+                Draw.reset();
+            }
+            
+            //logicai timers
+            if(Core.settings.getBool("unitLogicTimerBars")){
+
+                Lines.stroke(2f);
+                Draw.color(Pal.health);
+                Lines.line(unit.x - (unit.hitSize() / 2f), unit.y - (unit.hitSize() / 2f), unit.x - (unit.hitSize() / 2f), unit.y + unit.hitSize() * (logicai.controlTimer / logicai.logicControlTimeout - 0.5f));
+
+                Lines.stroke(2f);
+                Draw.color(Pal.items);
+                Lines.line(unit.x - (unit.hitSize() / 2f) - 1f, unit.y - (unit.hitSize() / 2f), unit.x - (unit.hitSize() / 2f) - 1f, unit.y + unit.hitSize() * (logicai.itemTimer / logicai.transferDelay - 0.5f));
+
+                Lines.stroke(2f);
+                Draw.color(Pal.items);
+                Lines.line(unit.x - (unit.hitSize() / 2f) - 1.5f, unit.y - (unit.hitSize() / 2f), unit.x - (unit.hitSize() / 2f) - 1.5f, unit.y + unit.hitSize() * (logicai.payTimer / logicai.transferDelay - 0.5f));
+
+                Draw.reset();
+            }
+        }
+
+        //Pathfind Renderer
+        if(Core.settings.getBool("unitPathLine") && Core.settings.getInt("unitPathLineLength") > 0){
+            Draw.z(Layer.power - 4f);
+            Tile tile = unit.tileOn();
+            Draw.reset();
+            for(int tileIndex = 1; tileIndex <= Core.settings.getInt("unitPathLineLength"); tileIndex++){
+                Tile nextTile = pathfinder.getTargetTile(tile, pathfinder.getField(unit.team, unit.pathType(), (unit.team.data().command == UnitCommand.attack)? Pathfinder.fieldCore : Pathfinder.fieldRally));
+                if(nextTile == null) break;
+                Lines.stroke(Core.settings.getInt("unitPathLineStroke"));
+                if(nextTile == tile){
+                    Draw.color(unit.team.color, Color.black, Mathf.absin(Time.time, 4f, 1f));
+                    Lines.poly(unit.x, unit.y, 6, unit.hitSize());
+                    break;
+                }
+                Draw.color(unit.team.color, Color.lightGray, Mathf.absin(Time.time, 8f, 1f));
+                Lines.dashLine(tile.worldx(), tile.worldy(), nextTile.worldx(), nextTile.worldy(), (int)(Mathf.len(nextTile.worldx() - tile.worldx(), nextTile.worldy() - tile.worldy()) / 4f));
+                //Fill.poly(nextTile.worldx(), nextTile.worldy(), 4, tilesize - 2, 90);
+                tile = nextTile;
+            }
+            Draw.reset();
+        }
+
     }
 
     public <T extends Unit & Payloadc> void drawPayload(T unit){
@@ -635,6 +720,21 @@ public class UnitType extends UnlockableContent{
                 weaponRotation);
 
                 Draw.z(z);
+            }
+
+            //display target line for every weaponmount by MI2
+            if(mount.aimX !=0 && mount.aimY != 0 && Core.settings.getBool("unitWeaponTargetLine")){
+                Lines.stroke(1f);
+                if(mount.shoot){
+                    Draw.color(1f, 0.2f, 0.2f, 0.5f);
+                    Lines.line(wx, wy, mount.aimX, mount.aimY);
+                } else {
+                    Draw.color(1f, 1f, 1f, 0.3f);
+                    Lines.dashLine(wx, wy, mount.aimX, mount.aimY, (int)(Mathf.len(mount.aimX - wx, mount.aimY - wy) / 8));
+                }
+                Lines.dashCircle(mount.aimX, mount.aimY, 3);
+                Draw.reset();
+
             }
 
             Draw.rect(weapon.region,

@@ -1032,7 +1032,7 @@ abstract class BuildingComp implements Posc, Teamc, Healthc, Buildingc, Timerc, 
         table.table(t -> {
             t.left();
             t.add(new Image(block.getDisplayIcon(tile))).size(8 * 4);
-            t.labelWrap(block.getDisplayName(tile)).left().width(190f).padLeft(5);
+            t.labelWrap("[#" + team.color + "]" +block.getDisplayName(tile)).left().width(190f).padLeft(5);
         }).growX().left();
 
         table.row();

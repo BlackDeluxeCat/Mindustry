@@ -1,6 +1,8 @@
 package mindustry.ui;
 
+import arc.scene.ui.Label;
 import arc.scene.ui.layout.Table;
+import arc.scene.ui.layout.Cell;
 import arc.struct.Seq;
 import arc.util.Log;
 import mindustry.Vars;
@@ -99,7 +101,7 @@ public class OtherCoreItemDisplay extends Table {
                     finally {
                         return num + "";
                     }
-                });
+                }).get().setFontScale(0.8f);
             }
             row();
         }

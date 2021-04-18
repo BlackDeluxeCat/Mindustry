@@ -216,12 +216,16 @@ public class MassDriver extends Block{
             for(Tile shooter : waitingShooters){
                 Drawf.circles(shooter.drawx(), shooter.drawy(), (tile.block().size / 2f + 1) * tilesize + sin - 2f, Pal.place);
                 Drawf.arrow(shooter.drawx(), shooter.drawy(), x, y, size * tilesize + sin, 4f + sin, Pal.place);
+                //add a line aimming at waitingShooters
+                Lines.dashLine(shooter.drawx(), shooter.drawy(), x, y, (int)(Mathf.len(shooter.drawx() - x, shooter.drawy() - y) / 8));
             }
 
             if(linkValid()){
                 Building target = world.build(link);
                 Drawf.circles(target.x, target.y, (target.block().size / 2f + 1) * tilesize + sin - 2f, Pal.place);
                 Drawf.arrow(x, y, target.x, target.y, size * tilesize + sin, 4f + sin);
+                //add a line aimming at target
+                Lines.dashLine(x, y, target.x, target.y, (int)(Mathf.len(target.x - x, target.y - y) / 8));
             }
 
             Drawf.dashCircle(x, y, range, Pal.accent);
