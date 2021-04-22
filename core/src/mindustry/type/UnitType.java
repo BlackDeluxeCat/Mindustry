@@ -473,7 +473,7 @@ public class UnitType extends UnlockableContent{
             unit.trns(legOffset.x, legOffset.y);
         }
 
-        if(unit instanceof Legsc){
+        if(unit instanceof Legsc && Core.settings.getInt("unitLegTransparency") != 0){
             drawLegs((Unit & Legsc)unit);
         }
 
@@ -520,14 +520,26 @@ public class UnitType extends UnlockableContent{
             Draw.reset();
             Lines.stroke(2f);
             Draw.color(Pal.health, 0.3f);            
-            Lines.line(unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 1.5f), unit.x + unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 1.5f));
+            Lines.line(unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f), unit.x + unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f));
             Draw.color(Pal.health, 0.8f);
-            Lines.line(unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 1.5f), unit.x + unit.hitSize() * (Mathf.maxZero(unit.health) * 1.2f / unit.maxHealth - 0.6f), unit.y + (unit.hitSize() / 1.5f));
+            Lines.line(unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f), unit.x + unit.hitSize() * (Mathf.maxZero(unit.health) * 1.2f / unit.maxHealth - 0.6f), unit.y + (unit.hitSize() / 2f));
             Lines.stroke(2f);
             if(unit.shield > 0){
                 for(int didgt = 1; didgt <= Mathf.digits((int)(unit.shield / unit.maxHealth)) + 1; didgt++){
                     Draw.color(Pal.shield, 0.8f);
-                    Lines.line(unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 1.5f) + (float)didgt * 2f, unit.x + unit.hitSize() * (Mathf.mod(unit.shield, unit.maxHealth * Mathf.pow(10f, (float)didgt - 1f)) / (unit.maxHealth * Mathf.pow(10f, (float)didgt - 1f)) * 1.2f - 0.6f), unit.y + (unit.hitSize() / 1.5f) + (float)didgt * 2f);
+                    float shieldAmountScale = unit.shield / (unit.maxHealth * Mathf.pow(10f, (float)didgt - 1f));
+                    if(didgt > 1){
+                        Lines.line(unit.x - unit.hitSize() * 0.6f, 
+                        unit.y + (unit.hitSize() / 2f) + (float)didgt * 2f, 
+                        unit.x + unit.hitSize() * ((Mathf.ceil((shieldAmountScale - Mathf.floor(shieldAmountScale)) * 10f) - 1f + 0.0001f) * 1.2f * (1f / 9f) - 0.6f), 
+                        unit.y + (unit.hitSize() / 2f) + (float)didgt * 2f);
+                        //(s-1)*(1/9)because line(0) will draw length of 1
+                    } else {
+                        Lines.line(unit.x - unit.hitSize() * 0.6f, 
+                        unit.y + (unit.hitSize() / 2f) + (float)didgt * 2f, 
+                        unit.x + unit.hitSize() * ((shieldAmountScale - Mathf.floor(shieldAmountScale) - 0.001f) * 1.2f - 0.6f), 
+                        unit.y + (unit.hitSize() / 2f) + (float)didgt * 2f);
+                    }
                 }
             }
             Draw.reset();
@@ -621,13 +633,14 @@ public class UnitType extends UnlockableContent{
 
     public void drawShadow(Unit unit){
         Draw.color(Pal.shadow);
+        Draw.alpha(0.4f * (float)Core.settings.getInt("unitTransparency") / 100f); //
         float e = Math.max(unit.elevation, visualElevation);
         Draw.rect(shadowRegion, unit.x + shadowTX * e, unit.y + shadowTY * e, unit.rotation - 90);
         Draw.color();
     }
 
     public void drawSoftShadow(Unit unit){
-        Draw.color(0, 0, 0, 0.4f);
+        Draw.color(0, 0, 0, 0.4f * (float)Core.settings.getInt("unitTransparency") / 100f); //transp!
         float rad = 1.6f;
         float size = Math.max(region.width, region.height) * Draw.scl;
         Draw.rect(softShadowRegion, unit, size * rad, size * rad);
@@ -655,7 +668,7 @@ public class UnitType extends UnlockableContent{
             unit.y + Angles.trnsy(unit.rotation + 180f, itemOffsetY),
             (3f + Mathf.absin(Time.time, 5f, 1f)) * unit.itemTime);
 
-            if(unit.isLocal() && !renderer.pixelator.enabled()){
+            if((Core.settings.getBool("unitItemAmountAlwaysOn") ? true : unit.isLocal()) && !renderer.pixelator.enabled()){
                 Fonts.outline.draw(unit.stack.amount + "",
                 unit.x + Angles.trnsx(unit.rotation + 180f, itemOffsetY),
                 unit.y + Angles.trnsy(unit.rotation + 180f, itemOffsetY) - 3,
@@ -679,6 +692,7 @@ public class UnitType extends UnlockableContent{
         }
 
         Draw.color(unit.team.color);
+        Draw.alpha((float)Core.settings.getInt("unitTransparency") / 100f); //
         Fill.circle(
             unit.x + Angles.trnsx(unit.rotation + 180, offset),
             unit.y + Angles.trnsy(unit.rotation + 180, offset),
@@ -695,6 +709,7 @@ public class UnitType extends UnlockableContent{
 
     public void drawWeapons(Unit unit){
         applyColor(unit);
+        Draw.alpha((float)Core.settings.getInt("unitTransparency") / 100f); //
 
         for(WeaponMount mount : unit.mounts){
             Weapon weapon = mount.weapon;
@@ -761,6 +776,7 @@ public class UnitType extends UnlockableContent{
 
     public void drawOutline(Unit unit){
         Draw.reset();
+        Draw.alpha((float)Core.settings.getInt("unitTransparency") / 100f); //
 
         if(Core.atlas.isFound(outlineRegion)){
             Draw.rect(outlineRegion, unit.x, unit.y, unit.rotation - 90);
@@ -769,6 +785,8 @@ public class UnitType extends UnlockableContent{
 
     public void drawBody(Unit unit){
         applyColor(unit);
+
+        Draw.alpha((float)Core.settings.getInt("unitTransparency") / 100f); //
 
         Draw.rect(region, unit.x, unit.y, unit.rotation - 90);
 
@@ -779,6 +797,8 @@ public class UnitType extends UnlockableContent{
         applyColor(unit);
 
         Draw.color(cellColor(unit));
+        Draw.alpha((float)Core.settings.getInt("unitTransparency") / 100f); //
+
         Draw.rect(cellRegion, unit.x, unit.y, unit.rotation - 90);
         Draw.reset();
     }
@@ -795,6 +815,8 @@ public class UnitType extends UnlockableContent{
 
     public <T extends Unit & Legsc> void drawLegs(T unit){
         applyColor(unit);
+        //apply settings
+        Draw.alpha((float)Core.settings.getInt("unitLegTransparency") / 100f);
 
         Leg[] legs = unit.legs();
 
@@ -802,7 +824,7 @@ public class UnitType extends UnlockableContent{
         float rotation = unit.baseRotation();
 
         for(Leg leg : legs){
-            Drawf.shadow(leg.base.x, leg.base.y, ssize);
+            Drawf.shadow(leg.base.x, leg.base.y, ssize, (float)Core.settings.getInt("unitLegTransparency") / 100f);
         }
 
         //legs are drawn front first
@@ -821,9 +843,11 @@ public class UnitType extends UnlockableContent{
                 float scl = visualElevation;
                 float elev = Mathf.slope(1f - leg.stage) * scl;
                 Draw.color(Pal.shadow);
+                Draw.alpha((float)Core.settings.getInt("unitLegTransparency") / 100f); //
                 Draw.rect(footRegion, leg.base.x + shadowTX * elev, leg.base.y + shadowTY * elev, position.angleTo(leg.base));
                 Draw.color();
             }
+            Draw.alpha((float)Core.settings.getInt("unitLegTransparency") / 100f); //
 
             Draw.rect(footRegion, leg.base.x, leg.base.y, position.angleTo(leg.base));
 
@@ -868,6 +892,7 @@ public class UnitType extends UnlockableContent{
 
         for(int i : Mathf.signs){
             Draw.mixcol(Tmp.c1.set(mechLegColor).lerp(Color.white, Mathf.clamp(unit.hitTime)), Math.max(Math.max(0, i * extension / mechStride), unit.hitTime));
+            Draw.alpha((float)Core.settings.getInt("unitTransparency") / 100f); //
 
             Draw.rect(legRegion,
             unit.x + Angles.trnsx(mech.baseRotation(), extension * i - boostTrns, -boostTrns*i),
@@ -884,7 +909,8 @@ public class UnitType extends UnlockableContent{
         }else{
             Draw.color(Color.white);
         }
-
+        Draw.alpha((float)Core.settings.getInt("unitTransparency") / 100f); //
+        
         Draw.rect(baseRegion, unit, mech.baseRotation() - 90);
 
         Draw.mixcol();

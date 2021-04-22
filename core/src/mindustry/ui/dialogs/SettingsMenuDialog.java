@@ -468,8 +468,9 @@ public class SettingsMenuDialog extends SettingsDialog{
         graphics.checkPref("unitLogicMoveLine", true);
         graphics.checkPref("unitLogicTimerBars", true);
         graphics.checkPref("unitWeaponTargetLine", true);
-        graphics.sliderPref("unitTransparency",100,0,100,10, i -> i + "%");
-        graphics.sliderPref("unitLegTransparency",100,0,100,10, i -> i + "%");
+        graphics.checkPref("unitItemAmountAlwaysOn", false);
+        graphics.sliderPref("unitTransparency",100,0,100,1, i -> i + "%");
+        graphics.sliderPref("unitLegTransparency",100,0,100,1, i -> i + "%");
         graphics.checkPref("blockWeaponTargetLine", true);
         graphics.checkPref("blockWeaponTargetLineWhenIdle", true);
     }

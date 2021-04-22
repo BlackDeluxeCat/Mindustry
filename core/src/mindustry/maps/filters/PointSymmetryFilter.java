@@ -11,14 +11,16 @@ import mindustry.maps.filters.FilterOption.*;
 import mindustry.world.*;
 
 public class PointSymmetryFilter extends GenerateFilter{
-    private final Vec2 v1 = new Vec2(), v2 = new Vec2(), v3 = new Vec2();
+    private final Vec2 v1 = new Vec2(), v2 = new Vec2(), v3 = new Vec2(), v4 = new Vec2(), v1o = new Vec2();
 
     int angle = 45;
+    int fourSides = 0;
 
     @Override
     public FilterOption[] options(){
         return Structs.arr(
-        new SliderOption("angle", () -> angle, f -> angle = (int)f, 0, 360, 45)
+        new SliderOption("angle", () -> angle, f -> angle = (int)f, 0, 360, 45),
+        new SliderOption("fourSides", () -> fourSides, f -> fourSides = (int)f, 0, 1, 1)
         );
     }
 
@@ -26,20 +28,41 @@ public class PointSymmetryFilter extends GenerateFilter{
     protected void apply(){
         v1.trnsExact(angle - 90, 1f);
         v2.set(v1).scl(-1f);
+        v4.trnsExact(angle - 180, 1f);
 
+        v1o.set(v1);
         v1.add(in.width/2f - 0.5f, in.height/2f - 0.5f);
         v2.add(in.width/2f - 0.5f, in.height/2f - 0.5f);
 
         v3.set(in.x, in.y);
-
-        if(!left(v1, v2, v3)){
-            symmetry(v3, v1.x, v1.y, v2.x, v2.y);
-            Tile tile = in.tile(v3.x, v3.y);
-            in.floor = tile.floor();
-            if(!tile.block().synthetic()){
-                in.block = tile.block();
+        if(fourSides == 0){
+            if(!left(v1, v2, v3)){
+                symmetry(v3, 0);
+                Tile tile = in.tile(v3.x, v3.y);
+                in.floor = tile.floor();
+                if(!tile.block().synthetic()){
+                    in.block = tile.block();
+                }
+                in.overlay = tile.overlay();
             }
-            in.overlay = tile.overlay();
+        } else {
+            Vec2 v3sub = new Vec2();
+            v3sub.set(v3);
+            v3sub.sub(in.width/2f - 0.5f,in.height/2f - 0.5f);
+            if(!rightTop(v1o, v4, v3sub)){
+                int corner = 0;
+                if(leftTop(v1o, v4, v3sub)) corner = 1;
+                if(leftButtom(v1o, v4, v3sub)) corner = 2;
+                if(rightButtom(v1o, v4, v3sub)) corner = 3;
+                symmetry(v3, corner);
+
+                Tile tile = in.tile(v3.x, v3.y);
+                in.floor = tile.floor();
+                if(!tile.block().synthetic()){
+                    in.block = tile.block();
+                }
+                in.overlay = tile.overlay();
+            }
         }
     }
 
@@ -58,20 +81,73 @@ public class PointSymmetryFilter extends GenerateFilter{
         );
 
         clamper.get(Tmp.v1.trns(angle - 90, size).add(image.getWidth()/2f + image.x, image.getHeight()/2f + image.y));
-        clamper.get(Tmp.v2.set(Tmp.v1).sub(image.getWidth()/2f + image.x, image.getHeight()/2f + image.y).rotate(180f).add(image.getWidth()/2f + image.x, image.getHeight()/2f + image.y));
+        if(fourSides == 0){
+            clamper.get(Tmp.v2.set(Tmp.v1).sub(image.getWidth()/2f + image.x, image.getHeight()/2f + image.y).rotate(180f).add(image.getWidth()/2f + image.x, image.getHeight()/2f + image.y));
+        } else {
+            clamper.get(Tmp.v2.set(Tmp.v1).sub(image.getWidth()/2f + image.x, image.getHeight()/2f + image.y).rotate(-90f).add(image.getWidth()/2f + image.x, image.getHeight()/2f + image.y));
+        }
 
         Lines.stroke(Scl.scl(3f), Pal.accent);
-        Lines.line(Tmp.v1.x, Tmp.v1.y, Tmp.v2.x, Tmp.v2.y);
+        Lines.line(Tmp.v1.x, Tmp.v1.y, image.getWidth()/2f + image.x, image.getHeight()/2f + image.y);
+        Lines.line(Tmp.v2.x, Tmp.v2.y, image.getWidth()/2f + image.x, image.getHeight()/2f + image.y);
         Draw.reset();
     }
 
-    void symmetry(Vec2 p, float x0, float y0, float x1, float y1){
-        //special case: uneven map symmetryed at 45 degree angle
-            p.x = in.width - p.x - 1;
-            p.y = in.height - p.y - 1;
+    void symmetry(Vec2 t2o, int c){
+        if(fourSides == 0 || in.width != in.height){
+            t2o.x = in.width - t2o.x - 1;
+            t2o.y = in.height - t2o.y - 1;
+        } else {
+            float orix, oriy;
+            if(c == 1){
+                //rotate -90
+                orix = t2o.x;
+                oriy = t2o.y;
+                t2o.x = oriy;
+                t2o.y = in.width - orix - 1;
+                //t2o.x = t2o.y;
+                //t2o.y = in.width - t2o.x - 1;
+            }
+            if(c == 2){
+                t2o.x = in.width - t2o.x - 1;
+                t2o.y = in.height - t2o.y - 1;
+            }
+            if(c == 3){
+                //rotate -180
+                t2o.x = in.width - t2o.x - 1;
+                t2o.y = in.height - t2o.y - 1;
+                //rotate -90
+                orix = t2o.x;
+                oriy = t2o.y;
+                t2o.x = oriy;
+                t2o.y = in.width - orix - 1;
+            }
+        }
 
     }
-
+    /*corners
+            /\
+            ||vyc
+         1  ||  0
+            ||
+            ||
+    =================>vxc
+         2  ||  3
+            ||
+            ||
+    */
+    boolean rightTop(Vec2 vyc, Vec2 vxc, Vec2 v){
+        return ((vyc.x * v.x + vyc.y * v.y) >= 0 && (vxc.x * v.x + vxc.y * v.y) >= 0 );
+    }
+    boolean rightButtom(Vec2 vyc, Vec2 vxc, Vec2 v){
+        return ((vyc.x * v.x + vyc.y * v.y) < 0 && (vxc.x * v.x + vxc.y * v.y) >= 0 );
+    }
+    boolean leftTop(Vec2 vyc, Vec2 vxc, Vec2 v){
+        return ((vyc.x * v.x + vyc.y * v.y) >= 0 && (vxc.x * v.x + vxc.y * v.y) < 0 );
+    }
+    boolean leftButtom(Vec2 vyc, Vec2 vxc, Vec2 v){
+        return ((vyc.x * v.x + vyc.y * v.y) < 0 && (vxc.x * v.x + vxc.y * v.y) < 0 );
+    }
     boolean left(Vec2 a, Vec2 b, Vec2 c){
         return ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) > 0;
     }

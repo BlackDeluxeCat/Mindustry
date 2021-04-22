@@ -577,7 +577,7 @@ public class MapEditorDialog extends Dialog implements Disposable{
                     }).growX().top();
                 }
 
-                if(experimental){
+                if(true){
                     mid.row();
 
                     mid.table(t -> {
