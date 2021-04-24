@@ -13,6 +13,7 @@ import arc.scene.style.*;
 import arc.scene.ui.*;
 import arc.scene.ui.ImageButton.*;
 import arc.scene.ui.layout.*;
+import arc.scene.ui.SettingsDialog.SettingsTable;
 import arc.struct.*;
 import arc.util.*;
 import mindustry.*;
@@ -120,6 +121,33 @@ public class HudFragment extends Fragment{
             });
             t.top().right();
         });
+
+        parent.fill(t -> {
+            t.name = "floating settings";
+            FloatingSettings settings = new FloatingSettings();
+            settings.sliderPref("minimapUnitTeamColorTransparency",100,0,100,1, i -> i + "%");
+            settings.checkPref("unitHealthBar", true);
+            settings.checkPref("unitPathLine", true);
+            settings.checkPref("unitLogicMoveLine", true);
+            settings.checkPref("unitWeaponTargetLine", true);
+            settings.checkPref("unitItemAmountAlwaysOn", false);
+            settings.sliderPref("unitTransparency",100,0,100,1, i -> i + "%");
+            settings.sliderPref("unitLegTransparency",100,0,100,1, i -> i + "%");
+            settings.checkPref("blockWeaponTargetLine", true);
+            settings.checkPref("keepPanViewInMove", true);
+
+            FloatingSettings expands = new FloatingSettings();
+            expands.checkPref("showFloatingSettings", false);
+            
+            t.table(Styles.black5, st1 -> st1.add(expands));
+            t.row();
+            Table FloatingSettings = new Table();
+            FloatingSettings.add(settings).visible(() -> Core.settings.getBool("showFloatingSettings"));
+            //t.table(Styles.black5, st -> st.add(settings).visible(() -> Core.settings.getBool("showFloatingSettings"))); 
+            t.add(FloatingSettings);
+            t.top().right();
+        });
+
 
         ui.hints.build(parent);
 

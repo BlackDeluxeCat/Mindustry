@@ -44,6 +44,7 @@ public class DesktopInput extends InputHandler{
     public boolean deleting = false, shouldShoot = false, panning = false;
     /** Mouse pan speed. */
     public float panScale = 0.005f, panSpeed = 4.5f, panBoostSpeed = 11f;
+    public Vec2 panPosition = new Vec2();
     /** Delta time between consecutive clicks. */
     public long selectMillis = 0;
     /** Previously selected tile. */
@@ -193,14 +194,15 @@ public class DesktopInput extends InputHandler{
         }
 
         boolean panCam = false;
-        float camSpeed = (!Core.input.keyDown(Binding.boost) ? panSpeed : panBoostSpeed) * Time.delta;
+        //adjustable pan view camera speed
+        float camSpeed = (!Core.input.keyDown(Binding.boost) ? ((float)Core.settings.getInt("panCamSpeed") / 100f) : ((float)Core.settings.getInt("panCamBoostSpeed") / 100f)) * Time.delta;
 
         if(input.keyDown(Binding.pan) && !scene.hasField() && !scene.hasDialog()){
             panCam = true;
             panning = true;
         }
 
-        if((Math.abs(Core.input.axis(Binding.move_x)) > 0 || Math.abs(Core.input.axis(Binding.move_y)) > 0 || input.keyDown(Binding.mouse_move)) && (!scene.hasField())){
+        if((((Math.abs(Core.input.axis(Binding.move_x)) > 0 || Math.abs(Core.input.axis(Binding.move_y)) > 0) && !Core.settings.getBool("keepPanViewInMove")) || input.keyDown(Binding.mouse_move)) && (!scene.hasField())){
             panning = false;
         }
 
@@ -213,11 +215,21 @@ public class DesktopInput extends InputHandler{
             Core.camera.position.add(Tmp.v1.setZero().add(Core.input.axis(Binding.move_x), Core.input.axis(Binding.move_y)).nor().scl(camSpeed));
         }else if(!player.dead() && !panning){
             Core.camera.position.lerpDelta(player, Core.settings.getBool("smoothcamera") ? 0.08f : 1f);
+            panPosition.x = 0f;
+            panPosition.y = 0f;
+        }else{
+            Core.camera.position.lerpDelta(player.x + panPosition.x, player.y + panPosition.y, Core.settings.getBool("smoothcamera") ? 0.2f : 1f);
         }
 
         if(panCam){
-            Core.camera.position.x += Mathf.clamp((Core.input.mouseX() - Core.graphics.getWidth() / 2f) * panScale, -1, 1) * camSpeed;
-            Core.camera.position.y += Mathf.clamp((Core.input.mouseY() - Core.graphics.getHeight() / 2f) * panScale, -1, 1) * camSpeed;
+            panPosition.x += ((Core.input.mouseX() - Core.graphics.getWidth() / 2f) * panScale) * camSpeed;
+            panPosition.y += ((Core.input.mouseY() - Core.graphics.getHeight() / 2f) * panScale) * camSpeed;
+        }
+
+        if(Math.abs(Core.input.axis(Binding.move_x)) > 0 || Math.abs(Core.input.axis(Binding.move_y)) > 0){
+            //if player move, keep player in camera's sight
+            panPosition.x = Mathf.clamp(panPosition.x, -0.8f * Core.graphics.getWidth() / (2f * renderer.getScale()), 0.8f * Core.graphics.getWidth() / (2f * renderer.getScale()));
+            panPosition.y = Mathf.clamp(panPosition.y, -0.8f * Core.graphics.getHeight() / (2f * renderer.getScale()), 0.8f * Core.graphics.getHeight() / (2f * renderer.getScale()));
         }
 
         shouldShoot = !scene.hasMouse();
