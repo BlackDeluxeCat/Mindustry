@@ -225,16 +225,16 @@ public class Turret extends ReloadTurret{
         public void draw(){
             Draw.rect(baseRegion, x, y);
             Draw.z(Layer.turret);
-            if(targetPos.x !=0 && targetPos.y != 0 && Core.settings.getBool("blockWeaponTargetLine")){
+            if(targetPos.x !=0 && targetPos.y != 0 && Core.settings.getBool("blockWeaponTargetLine") && Mathf.len(targetPos.x - x, targetPos.y - y) <= 1500f){
                 if(isShooting()){
-                Draw.color(1f, 0.2f, 0.2f, 0.5f);
+                Draw.color(1f, 0.2f, 0.2f, 0.8f);
                 Lines.stroke(1.5f);
-                Lines.dashLine(x, y, targetPos.x, targetPos.y, (int)(Mathf.len(targetPos.x - x, targetPos.y - y) / 8));
+                Lines.line(x, y, targetPos.x, targetPos.y);
                 Lines.dashCircle(targetPos.x, targetPos.y, 8);
                 } else if(Core.settings.getBool("blockWeaponTargetLineWhenIdle")){
                 Draw.color(1f, 1f, 1f, 0.3f);
                 Lines.stroke(1.5f);
-                Lines.dashLine(x, y, targetPos.x, targetPos.y, (int)(Mathf.len(targetPos.x - x, targetPos.y - y) / 8));
+                Lines.line(x, y, targetPos.x, targetPos.y);
                 Lines.dashCircle(targetPos.x, targetPos.y, 8);
                 }
             }

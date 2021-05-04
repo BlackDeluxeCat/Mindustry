@@ -165,6 +165,11 @@ public class OverlayRenderer{
 
         input.drawOverSelect();
 
+        if(ui.hudfrag.blockfrag.hover() instanceof Unit unit){
+            Draw.color(unit.team.color);
+            Lines.dashCircle(unit.x, unit.y, unit.type.range);
+        }
+
         if(ui.hudfrag.blockfrag.hover() instanceof Unit unit && unit.controller() instanceof LogicAI ai && ai.controller instanceof Building build && build.isValid()){
             Drawf.square(build.x, build.y, build.block.size * tilesize/2f + 2f);
             if(!unit.within(build, unit.hitSize * 2f)){

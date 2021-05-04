@@ -38,6 +38,7 @@ public class HudFragment extends Fragment{
 
     public final PlacementFragment blockfrag = new PlacementFragment();
     public boolean shown = true;
+    public long startTime = 0;
 
     private ImageButton flip;
     private CoreItemsDisplay coreItems = new CoreItemsDisplay();
@@ -93,6 +94,7 @@ public class HudFragment extends Fragment{
 
         Events.on(WorldLoadEvent.class,e->{
             otherCoreItemDisplay.updateTeamList();
+            startTime = Time.timeSinceMillis(0);
         });
 
         //paused table
@@ -136,13 +138,14 @@ public class HudFragment extends Fragment{
             settings.checkPref("blockWeaponTargetLine", true);
             settings.checkPref("keepPanViewInMove", true);
 
-            FloatingSettings expands = new FloatingSettings();
-            expands.checkPref("showFloatingSettings", false);
-            
-            t.table(Styles.black5, st1 -> st1.add(expands));
+            CheckBox box = new CheckBox("Quick Settings");
+            box.changed(() -> {
+            });
+            box.left();
+            t.table(Styles.black5, st1 -> st1.add(box).left());
             t.row();
             Table FloatingSettings = new Table();
-            FloatingSettings.add(settings).visible(() -> Core.settings.getBool("showFloatingSettings"));
+            FloatingSettings.add(settings).visible(() -> box.isChecked());
             //t.table(Styles.black5, st -> st.add(settings).visible(() -> Core.settings.getBool("showFloatingSettings"))); 
             t.add(FloatingSettings);
             t.top().right();
@@ -278,6 +281,66 @@ public class HudFragment extends Fragment{
             }).width(dsize * 5 + 4f);
             editorMain.visible(() -> shown && state.isEditor());
 
+            //map info/nextwave display
+            cont.table(Tex.buttonEdge4, infoWave -> {
+                infoWave.name = "map/wave";
+                infoWave.left().top().margin(3).visible(() -> shown);
+                infoWave.table().update(t -> {
+                    t.clear();
+                    t.left();
+
+                    t.label(() -> "" + (state.rules.fire?(Iconc.statusBurning):""));
+                    t.label(() -> "" + (state.rules.damageExplosions?(Iconc.itemBlastCompound):""));
+                    t.label(() -> "" + (state.rules.reactorExplosions?(Iconc.blockThoriumReactor):""));
+                    t.label(() -> "" + (state.rules.unitAmmo?(Iconc.itemCopper):""));
+                    t.label(() -> "" + (state.rules.unitCapVariable?(Iconc.blockCoreShard):""));
+                    t.row();
+
+                    t.label(() -> "" + (state.rules.logicUnitBuild?(Iconc.blockMicroProcessor):""));
+                    t.label(() -> "" + (state.rules.lighting?(Iconc.blockIlluminator):""));
+                    t.label(() -> "" + (state.rules.coreIncinerates?(Iconc.blockIncinerator):""));
+                    t.label(() -> "" + (state.rules.schematicsAllowed?(Iconc.paste):""));
+                    t.label(() -> "MI2").get().setFontScale(0.5f);
+                    t.row();
+
+                    t.label(() -> "BHp ").get().setFontScale(0.5f);
+                    t.label(() -> "BDmg ").get().setFontScale(0.5f);
+                    t.label(() -> "UDmg ").get().setFontScale(0.5f);
+                    t.label(() -> "BCost ").get().setFontScale(0.5f);
+                    t.label(() -> "BSpd ").get().setFontScale(0.5f);
+                    t.label(() -> "BRe ").get().setFontScale(0.5f);
+                    t.label(() -> "USpd ").get().setFontScale(0.5f);
+                    t.row();
+
+                    t.label(() -> " " + (state.rules.blockHealthMultiplier)).get().setFontScale(0.5f);
+                    t.label(() -> " " + (state.rules.blockDamageMultiplier)).get().setFontScale(0.5f);
+                    t.label(() -> " " + (state.rules.unitDamageMultiplier)).get().setFontScale(0.5f);
+                    t.label(() -> " " + (state.rules.buildCostMultiplier)).get().setFontScale(0.5f);
+                    t.label(() -> " " + (state.rules.buildSpeedMultiplier)).get().setFontScale(0.5f);
+                    t.label(() -> " " + (state.rules.deconstructRefundMultiplier)).get().setFontScale(0.5f);
+                    t.label(() -> " " + (state.rules.unitBuildSpeedMultiplier)).get().setFontScale(0.5f);
+                    t.row();
+                    for(SpawnGroup group : state.rules.spawns){
+                        if(group.getSpawned(state.wave - 1) > 0){
+                            t.label(() -> group.type.emoji()); 
+                        }
+                    }
+                    t.row();
+                    for(SpawnGroup group : state.rules.spawns){
+                        if(group.getSpawned(state.wave - 1) > 0){
+                            t.label(() -> " " + group.getSpawned(state.wave - 1) + " ").get().setFontScale(0.5f); 
+                        }
+                    }
+                    t.row();
+                    for(SpawnGroup group : state.rules.spawns){
+                        if(group.getSpawned(state.wave - 1) > 0){
+                            t.label(() -> " " + (int)group.getShield(state.wave - 1) + " ").get().setFontScale(0.5f); 
+                        }
+                    }
+                });
+            });
+
+
             //fps display
             cont.table(info -> {
                 info.name = "fps/ping";
@@ -300,6 +363,8 @@ public class HudFragment extends Fragment{
 
                 info.label(() -> ping.get(netClient.getPing())).visible(net::client).left().style(Styles.outlineLabel).name("ping");
 
+                info.row();
+                info.label(() -> (Time.timeSinceMillis(startTime) / 60000) + ":" + Mathf.mod((int)Time.timeSinceMillis(startTime) / 1000, 60) + "." + Mathf.mod((int)Time.timeSinceMillis(startTime) / 100, 10));
             }).top().left();
         });
 

@@ -177,7 +177,7 @@ public class FloatingSettings extends Table{
 
             table.table(t -> {
                 t.left().defaults().left();
-                t.add(label).minWidth(label.getPrefWidth() / Scl.scl(2f) + 50);
+                t.add(label).minWidth(label.getPrefWidth() / Scl.scl(1f) + 30);
                 t.add(slider).width(100);
             }).left().padTop(1);
 

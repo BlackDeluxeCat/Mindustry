@@ -207,7 +207,7 @@ public class DesktopInput extends InputHandler{
         }
 
         //TODO awful UI state checking code
-        if(((player.dead() || state.isPaused()) && !ui.chatfrag.shown()) && !scene.hasField() && !scene.hasDialog()){
+        if((player.dead() || state.isPaused()) && !scene.hasField() && !scene.hasDialog()){
             if(input.keyDown(Binding.mouse_move)){
                 panCam = true;
             }
@@ -217,7 +217,7 @@ public class DesktopInput extends InputHandler{
             Core.camera.position.lerpDelta(player, Core.settings.getBool("smoothcamera") ? 0.08f : 1f);
             panPosition.x = 0f;
             panPosition.y = 0f;
-        }else{
+        }else if(!player.dead()){
             Core.camera.position.lerpDelta(player.x + panPosition.x, player.y + panPosition.y, Core.settings.getBool("smoothcamera") ? 0.2f : 1f);
         }
 

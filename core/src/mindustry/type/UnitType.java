@@ -557,7 +557,7 @@ public class UnitType extends UnlockableContent{
         //display logicAI info by MI2
         if(unit.controller() instanceof LogicAI logicai){
             Draw.reset();
-            if(Core.settings.getBool("unitLogicMoveLine")){
+            if(Core.settings.getBool("unitLogicMoveLine") && Mathf.len(logicai.moveX - unit.x, logicai.moveY - unit.y) <= 1200f){
                 Lines.stroke(1f);
                 Draw.color(0.2f, 0.2f, 1f, 0.9f);
                 Lines.dashLine(unit.x, unit.y, logicai.moveX, logicai.moveY, (int)(Mathf.len(logicai.moveX - unit.x, logicai.moveY - unit.y) / 8));
@@ -738,16 +738,16 @@ public class UnitType extends UnlockableContent{
             }
 
             //display target line for every weaponmount by MI2
-            if(mount.aimX !=0 && mount.aimY != 0 && Core.settings.getBool("unitWeaponTargetLine")){
+            if(mount.aimX !=0 && mount.aimY != 0 && Core.settings.getBool("unitWeaponTargetLine") && Mathf.len(mount.aimX - wx, mount.aimY - wy) <= 1200f){
                 Lines.stroke(1f);
                 if(mount.shoot){
-                    Draw.color(1f, 0.2f, 0.2f, 0.5f);
+                    Draw.color(1f, 0.2f, 0.2f, 0.8f);
                     Lines.line(wx, wy, mount.aimX, mount.aimY);
                 } else {
                     Draw.color(1f, 1f, 1f, 0.3f);
-                    Lines.dashLine(wx, wy, mount.aimX, mount.aimY, (int)(Mathf.len(mount.aimX - wx, mount.aimY - wy) / 8));
+                    Lines.line(wx, wy, mount.aimX, mount.aimY);
                 }
-                Lines.dashCircle(mount.aimX, mount.aimY, 3);
+                Lines.dashCircle(mount.aimX, mount.aimY, 8);
                 Draw.reset();
 
             }
