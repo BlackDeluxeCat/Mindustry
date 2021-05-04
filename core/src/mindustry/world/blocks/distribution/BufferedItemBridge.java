@@ -1,5 +1,6 @@
 package mindustry.world.blocks.distribution;
 
+import arc.*;
 import arc.graphics.g2d.Draw;
 import arc.math.*;
 import arc.util.*;
@@ -48,38 +49,40 @@ public class BufferedItemBridge extends ExtendingItemBridge{
         public void draw(){
             super.draw();
 
-            Item[] bufferItems = buffer.getItems();
-            float[] bufferTimes = buffer.getTimes();
-            Tile other = world.tile(link);
+            if(Core.settings.getBool("blockBridgeItem")){
+                Item[] bufferItems = buffer.getItems();
+                float[] bufferTimes = buffer.getTimes();
+                Tile other = world.tile(link);
 
-            float begx, begy, endx, endy;
-            if(!linkValid(tile, other)){
-                begx = x - tilesize / 2f;
-                begy = y - tilesize / 2f;
-                endx = x + tilesize / 2f;
-                endy = y - tilesize / 2f;
-            }else{
-                int i = tile.absoluteRelativeTo(other.x, other.y);
-                float ex = other.worldx() - x - Geometry.d4(i).x * tilesize / 2f,
-                ey = other.worldy() - y - Geometry.d4(i).y * tilesize / 2f;
-                float uptime = state.isEditor() ? 1f : this.uptime;
-                ex *= uptime;
-                ey *= uptime;
+                float begx, begy, endx, endy;
+                if(!linkValid(tile, other)){
+                    begx = x - tilesize / 2f;
+                    begy = y - tilesize / 2f;
+                    endx = x + tilesize / 2f;
+                    endy = y - tilesize / 2f;
+                }else{
+                    int i = tile.absoluteRelativeTo(other.x, other.y);
+                    float ex = other.worldx() - x - Geometry.d4(i).x * tilesize / 2f,
+                    ey = other.worldy() - y - Geometry.d4(i).y * tilesize / 2f;
+                    float uptime = state.isEditor() ? 1f : this.uptime;
+                    ex *= uptime;
+                    ey *= uptime;
 
-                begx = x + Geometry.d4(i).x * tilesize / 2f;
-                begy = y + Geometry.d4(i).y * tilesize / 2f;
-                endx = x + ex;
-                endy = y + ey;
-            }
-
-            float loti = 0f;
-            for(int idi = 0; idi < bufferItems.length; idi++){
-                if(bufferItems[idi] != null){
-                    Draw.rect(bufferItems[idi].icon(Cicon.medium), 
-                    begx + ((endx - begx) / (float)bufferItems.length * Math.min(((Time.time - bufferTimes[idi]) / speed) * bufferCapacity, bufferCapacity - loti)), 
-                    begy + ((endy - begy) / (float)bufferItems.length * Math.min(((Time.time - bufferTimes[idi]) / speed) * bufferCapacity, bufferCapacity - loti)), 4f, 4f);
+                    begx = x + Geometry.d4(i).x * tilesize / 2f;
+                    begy = y + Geometry.d4(i).y * tilesize / 2f;
+                    endx = x + ex;
+                    endy = y + ey;
                 }
-                loti++;
+
+                float loti = 0f;
+                for(int idi = 0; idi < bufferItems.length; idi++){
+                    if(bufferItems[idi] != null){
+                        Draw.rect(bufferItems[idi].icon(Cicon.medium), 
+                        begx + ((endx - begx) / (float)bufferItems.length * Math.min(((Time.time - bufferTimes[idi]) / speed) * bufferCapacity, bufferCapacity - loti)), 
+                        begy + ((endy - begy) / (float)bufferItems.length * Math.min(((Time.time - bufferTimes[idi]) / speed) * bufferCapacity, bufferCapacity - loti)), 4f, 4f);
+                    }
+                    loti++;
+                }
             }
         }
 

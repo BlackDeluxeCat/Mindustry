@@ -124,32 +124,34 @@ public class HudFragment extends Fragment{
             t.top().right();
         });
 
-        parent.fill(t -> {
-            t.name = "floating settings";
-            FloatingSettings settings = new FloatingSettings();
-            settings.sliderPref("minimapUnitTeamColorTransparency",100,0,100,1, i -> i + "%");
-            settings.checkPref("unitHealthBar", true);
-            settings.checkPref("unitPathLine", true);
-            settings.checkPref("unitLogicMoveLine", true);
-            settings.checkPref("unitWeaponTargetLine", true);
-            settings.checkPref("unitItemAmountAlwaysOn", false);
-            settings.sliderPref("unitTransparency",100,0,100,1, i -> i + "%");
-            settings.sliderPref("unitLegTransparency",100,0,100,1, i -> i + "%");
-            settings.checkPref("blockWeaponTargetLine", true);
-            settings.checkPref("keepPanViewInMove", true);
+        if(Core.settings.getBool("showFloatingSettings")){
+            parent.fill(t -> {
+                t.name = "floating settings";
+                FloatingSettings settings = new FloatingSettings();
+                settings.sliderPref("minimapUnitTeamColorTransparency",100,0,100,1, i -> i + "%");
+                settings.checkPref("unitHealthBar", true);
+                settings.checkPref("unitPathLine", true);
+                settings.checkPref("unitLogicMoveLine", true);
+                settings.checkPref("unitWeaponTargetLine", true);
+                settings.checkPref("unitItemAmountAlwaysOn", false);
+                settings.sliderPref("unitTransparency",100,0,100,1, i -> i + "%");
+                settings.sliderPref("unitLegTransparency",100,0,100,1, i -> i + "%");
+                settings.checkPref("blockWeaponTargetLine", true);
+                settings.checkPref("keepPanViewInMove", true);
 
-            CheckBox box = new CheckBox("Quick Settings");
-            box.changed(() -> {
+                CheckBox box = new CheckBox("Quick Settings");
+                box.changed(() -> {
+                });
+                box.left();
+                t.table(Styles.black5, st1 -> st1.add(box).left());
+                t.row();
+                Table FloatingSettings = new Table();
+                FloatingSettings.add(settings).visible(() -> box.isChecked());
+                //t.table(Styles.black5, st -> st.add(settings).visible(() -> Core.settings.getBool("showFloatingSettings"))); 
+                t.add(FloatingSettings);
+                t.top().right();
             });
-            box.left();
-            t.table(Styles.black5, st1 -> st1.add(box).left());
-            t.row();
-            Table FloatingSettings = new Table();
-            FloatingSettings.add(settings).visible(() -> box.isChecked());
-            //t.table(Styles.black5, st -> st.add(settings).visible(() -> Core.settings.getBool("showFloatingSettings"))); 
-            t.add(FloatingSettings);
-            t.top().right();
-        });
+        }
 
 
         ui.hints.build(parent);

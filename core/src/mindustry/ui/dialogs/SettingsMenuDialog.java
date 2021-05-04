@@ -473,6 +473,7 @@ public class SettingsMenuDialog extends SettingsDialog{
         graphics.sliderPref("unitLegTransparency",100,0,100,1, i -> i + "%");
         graphics.checkPref("blockWeaponTargetLine", true);
         graphics.checkPref("blockWeaponTargetLineWhenIdle", true);
+        graphics.checkPref("blockBridgeItem", true);
         graphics.sliderPref("panCamSpeed", 450, 50, 1500, 50, i -> i + "");
         graphics.sliderPref("panCamBoostSpeed", 1100, 100, 4500, 100, i -> i + "");
         graphics.checkPref("keepPanViewInMove", true);

@@ -1,5 +1,6 @@
 package mindustry.world.blocks.distribution;
 
+import arc.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
@@ -325,9 +326,9 @@ public class ItemBridge extends Block{
             Draw.z(Layer.power);
 
             //draw each item this bridge have
-            Draw.color(Color.white, 0.8f);
-            int loti = 0;
-            if(items != null){
+            if(items != null && Core.settings.getBool("blockBridgeItem")){
+                Draw.color(Color.white, 0.8f);
+                int loti = 0;
                 for(int iid = 0; iid < items.length(); iid++){
                     if(items.get(iid) > 0){
                         for(int itemid = 1; itemid <= items.get(iid); itemid++){
