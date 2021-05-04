@@ -14,6 +14,22 @@ public class ItemBuffer{
         this.buffer = new long[capacity];
     }
 
+    public Item[] getItems(){
+        Item[] items = new Item[buffer.length];
+            for(int ii = 0; ii < buffer.length; ii++){
+                items[ii] = (ii < index)? content.item(Pack.leftShort(Pack.rightInt(buffer[ii]))) : null;
+            }
+        return items;
+    }
+
+    public float[] getTimes(){
+        float[] times = new float[buffer.length];
+            for(int ii = 0; ii < buffer.length; ii++){
+                times[ii] = (ii < index)? Float.intBitsToFloat(Pack.leftInt(buffer[ii])) : 999999999f;
+            }
+        return times;
+    }
+
     public boolean accepts(){
         return index < buffer.length;
     }

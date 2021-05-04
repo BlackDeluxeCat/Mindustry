@@ -15,6 +15,7 @@ import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.input.*;
 import mindustry.type.*;
+import mindustry.ui.*;
 import mindustry.world.*;
 import mindustry.world.meta.*;
 
@@ -323,7 +324,26 @@ public class ItemBridge extends Block{
 
             Draw.z(Layer.power);
 
+            //draw each item this bridge have
+            Draw.color(Color.white, 0.8f);
+            int loti = 0;
+            for(int iid = 0; iid < items.length(); iid++){
+                if(items.get(iid) > 0){
+                    for(int itemid = 1; itemid <= items.get(iid); itemid++){
+                        Draw.rect(
+                        content.item(iid).icon(Cicon.medium), 
+                        x, 
+                        y - tilesize/2f + 1f + 0.6f * (float)loti,
+                        4f,
+                        4f
+                        );
+                        loti++;
+                    }
+                }
+            }
+
             Tile other = world.tile(link);
+            
             if(!linkValid(tile, other)) return;
 
             if(Mathf.zero(Renderer.bridgeOpacity)) return;
