@@ -327,17 +327,19 @@ public class ItemBridge extends Block{
             //draw each item this bridge have
             Draw.color(Color.white, 0.8f);
             int loti = 0;
-            for(int iid = 0; iid < items.length(); iid++){
-                if(items.get(iid) > 0){
-                    for(int itemid = 1; itemid <= items.get(iid); itemid++){
-                        Draw.rect(
-                        content.item(iid).icon(Cicon.medium), 
-                        x, 
-                        y - tilesize/2f + 1f + 0.6f * (float)loti,
-                        4f,
-                        4f
-                        );
-                        loti++;
+            if(items != null){
+                for(int iid = 0; iid < items.length(); iid++){
+                    if(items.get(iid) > 0){
+                        for(int itemid = 1; itemid <= items.get(iid); itemid++){
+                            Draw.rect(
+                            content.item(iid).icon(Cicon.medium), 
+                            x, 
+                            y - tilesize/2f + 1f + 0.6f * (float)loti,
+                            4f,
+                            4f
+                            );
+                            loti++;
+                        }
                     }
                 }
             }
