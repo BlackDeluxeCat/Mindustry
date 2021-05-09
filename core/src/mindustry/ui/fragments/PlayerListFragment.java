@@ -8,6 +8,7 @@ import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
 import arc.util.*;
+import mindustry.input.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.net.*;
@@ -67,7 +68,7 @@ public class PlayerListFragment extends Fragment{
                     menu.button("@close", this::toggle);
                 }).margin(0f).pad(10f).growX();
 
-            }).touchable(Touchable.enabled).margin(14f).minWidth(360f);
+            }).touchable(Touchable.enabled).margin(14f).minWidth(720f);
         });
 
         rebuild();
@@ -76,7 +77,8 @@ public class PlayerListFragment extends Fragment{
     public void rebuild(){
         content.clear();
 
-        float h = 74f;
+        float h = 40f;
+        float bs = (h) - 2f;
         boolean found = false;
 
         players.clear();
@@ -106,30 +108,38 @@ public class PlayerListFragment extends Fragment{
                     Draw.reset();
                 }
             };
-            table.margin(8);
+            table.margin(4);
             table.add(new Image(user.icon()).setScaling(Scaling.bounded)).grow();
             table.name = user.name();
 
             button.add(table).size(h);
-            button.labelWrap("[#" + user.color().toString().toUpperCase() + "]" + user.name()).width(170f).pad(10);
+            button.labelWrap("[" + user.id + "] ").minWidth(150f);
+            button.image(Icon.admin).visible(() -> user.admin && !(!user.isLocal() && net.server())).size(bs).get().updateVisibility();
+            button.labelWrap("[#" + user.color().toString().toUpperCase() + "]" + user.name()).width(320f).pad(10);
             button.add().grow();
 
-            button.image(Icon.admin).visible(() -> user.admin && !(!user.isLocal() && net.server())).padRight(5).get().updateVisibility();
+            
 
-            if((net.server() || player.admin) && !user.isLocal() && (!user.admin || net.server())){
-                button.add().growY();
+            
+            button.add().growY();
 
-                float bs = (h) / 2f;
+            button.table(t -> {
+                t.defaults().size(bs);
 
-                button.table(t -> {
-                    t.defaults().size(bs);
+                t.button(Icon.units, Styles.clearPartiali,()->{
+                    if(control.input instanceof DesktopInput){
+                        ((DesktopInput) control.input).panning = true;
+                        ((DesktopInput) control.input).panPosition.set(user.x - player.x, user.y - player.y);
+                    }
+                    //Core.camera.position.lerpDelta(user.x, user.y,1f);
+                }).visible(()-> !user.isLocal());
 
+                if((net.server() || player.admin) && !user.isLocal() && (!user.admin || net.server())){
                     t.button(Icon.hammer, Styles.clearPartiali,
                     () -> ui.showConfirm("@confirm", Core.bundle.format("confirmban",  user.name()), () -> Call.adminRequest(user, AdminAction.ban)));
                     t.button(Icon.cancel, Styles.clearPartiali,
                     () -> ui.showConfirm("@confirm", Core.bundle.format("confirmkick",  user.name()), () -> Call.adminRequest(user, AdminAction.kick)));
-
-                    t.row();
+                    //t.row();
 
                     t.button(Icon.admin, Styles.clearTogglePartiali, () -> {
                         if(net.client()) return;
@@ -147,20 +157,19 @@ public class PlayerListFragment extends Fragment{
                         .checked(user.admin);
 
                     t.button(Icon.zoom, Styles.clearPartiali, () -> Call.adminRequest(user, AdminAction.trace));
+                }else if(!user.isLocal() && !user.admin && net.client() && Groups.player.size() >= 2 && player.team() == user.team()){ //votekick
+                    t.button(Icon.hammerSmall, Styles.clearPartiali,
+                            () -> {
+                                ui.showConfirm("@confirm", Core.bundle.format("confirmvotekick",  user.name()), () -> {
+                                    Call.sendChatMessage("/votekick " + user.name());
+                                });
+                            });
+                }
 
-                }).padRight(12).size(bs + 10f, bs);
-            }else if(!user.isLocal() && !user.admin && net.client() && Groups.player.size() >= 3 && player.team() == user.team()){ //votekick
-                button.add().growY();
+            }).padRight(12).size(bs*5 + 10f, bs);
 
-                button.button(Icon.hammer, Styles.clearPartiali,
-                () -> {
-                    ui.showConfirm("@confirm", Core.bundle.format("confirmvotekick",  user.name()), () -> {
-                        Call.sendChatMessage("/votekick " + user.name());
-                    });
-                }).size(h);
-            }
 
-            content.add(button).padBottom(-6).width(350f).maxHeight(h + 14);
+            content.add(button).padBottom(-6).width(700f).maxHeight(h + 14);
             content.row();
             content.image().height(4f).color(state.rules.pvp ? user.team().color : Pal.gray).growX();
             content.row();

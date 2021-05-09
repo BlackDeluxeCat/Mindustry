@@ -256,6 +256,17 @@ public class ChatFragment extends Table{
         return shown;
     }
 
+    //by shugen002
+    public void addMessage(String message, String sender, Player playersender){
+        if(sender == null && message == null) return;
+        messages.insert(0, new ChatMessage(message, sender, playersender));
+
+        fadetime += 1f;
+        fadetime = Math.min(fadetime, messagesShown) + 1f;
+
+        if(scrollPos > 0) scrollPos++;
+    }
+
     public void addMessage(String message, String sender){
         if(sender == null && message == null) return;
         messages.insert(0, new ChatMessage(message, sender));
@@ -278,6 +289,19 @@ public class ChatFragment extends Table{
                 formattedMessage = message == null ? "" : message;
             }else{
                 formattedMessage = "[coral][[" + sender + "[coral]]:[white] " + message;
+            }
+        }
+
+        //mostly by shugen002
+        public ChatMessage(String message, String sender, Player senderplayer){
+            this.message = message;
+            this.sender = sender;
+            if(sender == null){ //no sender, this is a server message?
+                formattedMessage = message == null ? "" : message;
+            }else if(senderplayer == null){
+                formattedMessage = "[coral][[" + sender + "[coral]]:[white] " + message;
+            }else {
+                formattedMessage = "[coral]["+senderplayer.id+"](" + (int)senderplayer.x / tilesize + "," + (int)senderplayer.y / tilesize + ")[[" + sender + "[coral]]:[white] " + message;
             }
         }
     }

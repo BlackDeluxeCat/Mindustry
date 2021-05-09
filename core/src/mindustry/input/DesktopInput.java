@@ -211,8 +211,8 @@ public class DesktopInput extends InputHandler{
             if(input.keyDown(Binding.mouse_move)){
                 panCam = true;
             }
-
-            Core.camera.position.add(Tmp.v1.setZero().add(Core.input.axis(Binding.move_x), Core.input.axis(Binding.move_y)).nor().scl(camSpeed));
+            Core.camera.position.lerpDelta(player.x + panPosition.x, player.y + panPosition.y, Core.settings.getBool("smoothcamera") ? 0.2f : 1f);
+            //Core.camera.position.add(Tmp.v1.setZero().add(Core.input.axis(Binding.move_x), Core.input.axis(Binding.move_y)).nor().scl(camSpeed));
         }else if(!player.dead() && !panning){
             Core.camera.position.lerpDelta(player, Core.settings.getBool("smoothcamera") ? 0.08f : 1f);
             panPosition.x = 0f;
@@ -221,13 +221,17 @@ public class DesktopInput extends InputHandler{
             Core.camera.position.lerpDelta(player.x + panPosition.x, player.y + panPosition.y, Core.settings.getBool("smoothcamera") ? 0.2f : 1f);
         }
 
+        if(player.dead()){
+            panPosition.add(Tmp.v1.setZero().add(Core.input.axis(Binding.move_x), Core.input.axis(Binding.move_y)).nor().scl(camSpeed));
+        }
+
         if(panCam){
             panPosition.x += ((Core.input.mouseX() - Core.graphics.getWidth() / 2f) * panScale) * camSpeed;
             panPosition.y += ((Core.input.mouseY() - Core.graphics.getHeight() / 2f) * panScale) * camSpeed;
         }
 
-        if(Math.abs(Core.input.axis(Binding.move_x)) > 0 || Math.abs(Core.input.axis(Binding.move_y)) > 0){
-            //if player move, keep player in camera's sight
+        if((Math.abs(Core.input.axis(Binding.move_x)) > 0 || Math.abs(Core.input.axis(Binding.move_y)) > 0) && !player.dead()){
+            //if player move, keep player in camera's range
             panPosition.x = Mathf.clamp(panPosition.x, -0.8f * Core.graphics.getWidth() / (2f * renderer.getScale()), 0.8f * Core.graphics.getWidth() / (2f * renderer.getScale()));
             panPosition.y = Mathf.clamp(panPosition.y, -0.8f * Core.graphics.getHeight() / (2f * renderer.getScale()), 0.8f * Core.graphics.getHeight() / (2f * renderer.getScale()));
         }

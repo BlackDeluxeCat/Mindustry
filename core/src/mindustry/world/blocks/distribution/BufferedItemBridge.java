@@ -77,6 +77,7 @@ public class BufferedItemBridge extends ExtendingItemBridge{
                 float loti = 0f;
                 for(int idi = 0; idi < bufferItems.length; idi++){
                     if(bufferItems[idi] != null){
+                        Draw.alpha(0.9f);
                         Draw.rect(bufferItems[idi].icon(Cicon.medium), 
                         begx + ((endx - begx) / (float)bufferItems.length * Math.min(((Time.time - bufferTimes[idi]) * timeScale / speed) * bufferCapacity, bufferCapacity - loti)), 
                         begy + ((endy - begy) / (float)bufferItems.length * Math.min(((Time.time - bufferTimes[idi]) * timeScale / speed) * bufferCapacity, bufferCapacity - loti)), 4f, 4f);

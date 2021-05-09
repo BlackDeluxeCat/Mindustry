@@ -518,11 +518,18 @@ public class UnitType extends UnlockableContent{
         Draw.z(Layer.shields + 6f);
         if(Core.settings.getBool("unitHealthBar")){
             Draw.reset();
-            Lines.stroke(2f);
-            Draw.color(Pal.health, 0.3f);            
+            Lines.stroke(4f);
+            Draw.color(unit.team.color, 0.5f);
             Lines.line(unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f), unit.x + unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f));
+            Lines.stroke(2f);
+            Draw.color(Pal.health, 0.3f);
+            Lines.line(
+                unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f), 
+                unit.x + unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f));
             Draw.color(Pal.health, 0.8f);
-            Lines.line(unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f), unit.x + unit.hitSize() * (Mathf.maxZero(unit.health) * 1.2f / unit.maxHealth - 0.6f), unit.y + (unit.hitSize() / 2f));
+            Lines.line(
+                unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f), 
+                unit.x + unit.hitSize() * (Mathf.maxZero(unit.health) * 1.2f / unit.maxHealth - 0.6f), unit.y + (unit.hitSize() / 2f));
             Lines.stroke(2f);
             if(unit.shield > 0){
                 for(int didgt = 1; didgt <= Mathf.digits((int)(unit.shield / unit.maxHealth)) + 1; didgt++){
@@ -548,7 +555,10 @@ public class UnitType extends UnlockableContent{
             for(StatusEffect eff : Vars.content.statusEffects()){
                 if(unit.hasEffect(eff)){
                     float iconSize = Mathf.ceil(unit.hitSize() / 4f);
-                    Draw.rect(eff.icon(Cicon.small),unit.x - unit.hitSize() * 0.6f + 0.5f * iconSize * Mathf.mod(index, 4f), unit.y + (unit.hitSize() / 1.5f) + iconSize * 0.5f + iconSize * Mathf.floor(index / 4f) + 2f, 4f, 4f);
+                    Draw.rect(eff.icon(Cicon.small), 
+                    unit.x - unit.hitSize() * 0.6f + 0.5f * iconSize * Mathf.mod(index, 4f), 
+                    unit.y + (unit.hitSize() / 2f) + 3f + iconSize * Mathf.floor(index / 4f), 
+                    4f, 4f);
                     index++;
                 }
             }

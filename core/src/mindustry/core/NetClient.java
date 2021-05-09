@@ -168,7 +168,7 @@ public class NetClient implements ApplicationListener{
     @Remote(targets = Loc.server, variants = Variant.both)
     public static void sendMessage(String message, String sender, Player playersender){
         if(Vars.ui != null){
-            Vars.ui.chatfrag.addMessage(message, sender);
+            Vars.ui.chatfrag.addMessage(message, sender, playersender);
         }
 
         if(playersender != null){

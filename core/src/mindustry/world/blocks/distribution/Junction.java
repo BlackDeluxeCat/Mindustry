@@ -1,7 +1,11 @@
 package mindustry.world.blocks.distribution;
 
+import arc.*;
+import arc.graphics.g2d.*;
+import arc.math.geom.*;
 import arc.util.*;
 import arc.util.io.*;
+import mindustry.ui.Cicon;
 import mindustry.gen.*;
 import mindustry.type.*;
 import mindustry.world.*;
@@ -75,6 +79,35 @@ public class Junction extends Block{
             if(relative == -1 || !buffer.accepts(relative)) return false;
             Building to = nearby(relative);
             return to != null && to.team == team;
+        }
+
+        @Override
+        public void draw(){
+            super.draw();
+            if(Core.settings.getBool("blockBridgeItem")){
+                float begx, begy, endx, endy;
+                float[][] times = buffer.getTimes();
+                Item[][] items = buffer.getItems();
+                for(int i = 0; i < 4; i++){
+                    endx = x + Geometry.d4(i).x * tilesize / 2f + Geometry.d4(Math.floorMod(i + 1, 4)).x * tilesize / 4f;
+                    endy = y + Geometry.d4(i).y * tilesize / 2f + Geometry.d4(Math.floorMod(i + 1, 4)).y * tilesize / 4f;
+                    begx = x - Geometry.d4(i).x * tilesize / 4f + Geometry.d4(Math.floorMod(i + 1, 4)).x * tilesize / 4f;
+                    begy = y - Geometry.d4(i).y * tilesize / 4f + Geometry.d4(Math.floorMod(i + 1, 4)).y * tilesize / 4f;
+                    if(buffer.indexes[i] > 0){
+                        float loti = 0f;
+                        for(int idi = 0; idi < buffer.indexes[i]; idi++){
+                            if(items[i][idi] != null){
+                                Draw.alpha(0.9f);
+                                Draw.rect(items[i][idi].icon(Cicon.medium), 
+                                begx + ((endx - begx) / (float)capacity * Math.min(((Time.time - times[i][idi]) * timeScale / speed) * capacity, (float)capacity - loti)), 
+                                begy + ((endy - begy) / (float)capacity * Math.min(((Time.time - times[i][idi]) * timeScale / speed) * capacity, (float)capacity - loti)),
+                                 4f, 4f);
+                            }
+                            loti++;
+                        }
+                    }
+                }
+            }
         }
 
         @Override
