@@ -91,6 +91,16 @@ public class MinimapRenderer{
 
         rect.set((dx - sz) * tilesize, (dy - sz) * tilesize, sz * 2 * tilesize, sz * 2 * tilesize);
 
+        //draw a linerect of view area
+        Lines.stroke(1f, new Color(1f, 1f, 1f, 0.5f));
+        float cx = !withLabels ? (Core.camera.position.x - rect.x) / rect.width * w : Core.camera.position.x / (world.width() * tilesize) * w;
+        float cy = !withLabels ? (Core.camera.position.y - rect.y) / rect.width * h : Core.camera.position.y / (world.height() * tilesize) * h;
+        Lines.rect(x + cx - Core.graphics.getWidth() / rect.width * w / renderer.getScale() / 2f, 
+            y + cy - Core.graphics.getHeight() / rect.width * h / renderer.getScale() / 2f, 
+            Core.graphics.getWidth() / rect.width * w / renderer.getScale() , 
+            Core.graphics.getHeight() / rect.width * h / renderer.getScale());
+        Draw.color();
+
         for(Unit unit : units){
             float rx = !withLabels ? (unit.x - rect.x) / rect.width * w : unit.x / (world.width() * tilesize) * w;
             float ry = !withLabels ? (unit.y - rect.y) / rect.width * h : unit.y / (world.height() * tilesize) * h;
@@ -103,11 +113,14 @@ public class MinimapRenderer{
             Draw.reset();
         }
 
-        if(withLabels && net.active()){
+        //always display labels
+        if(true || (withLabels && net.active())){
             for(Player player : Groups.player){
                 if(!player.dead()){
-                    float rx = player.x / (world.width() * tilesize) * w;
-                    float ry = player.y / (world.height() * tilesize) * h;
+                    //float rx = player.x / (world.width() * tilesize) * w;
+                    //float ry = player.y / (world.height() * tilesize) * h;
+                    float rx = !withLabels ? (player.x - rect.x) / rect.width * w : player.x / (world.width() * tilesize) * w;
+                    float ry = !withLabels ? (player.y - rect.y) / rect.width * h : player.y / (world.height() * tilesize) * h;
 
                     drawLabel(x + rx, y + ry, player.name, player.team().color);
                 }

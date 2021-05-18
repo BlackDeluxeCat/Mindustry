@@ -303,6 +303,7 @@ public class HudFragment extends Fragment{
                     t.label(() -> "" + (state.rules.coreIncinerates?(Iconc.blockIncinerator):""));
                     t.label(() -> "" + (state.rules.schematicsAllowed?(Iconc.paste):""));
                     t.label(() -> "MI2").get().setFontScale(0.5f);
+                    t.label(() -> "a18").get().setFontScale(0.5f);
                     t.row();
 
                     t.label(() -> "BHp ").get().setFontScale(0.5f);
@@ -340,7 +341,7 @@ public class HudFragment extends Fragment{
                         }
                     }
                 });
-            });
+            }).fillY();
 
 
             //fps display
@@ -363,10 +364,12 @@ public class HudFragment extends Fragment{
                 }
                 info.row();
 
+                info.label(() -> (Time.timeSinceMillis(startTime) / 60000) + " : " + Mathf.mod((int)Time.timeSinceMillis(startTime) / 1000, 60) + " . " + Mathf.mod((int)Time.timeSinceMillis(startTime) / 100, 10));
+                
+                info.row();
+
                 info.label(() -> ping.get(netClient.getPing())).visible(net::client).left().style(Styles.outlineLabel).name("ping");
 
-                info.row();
-                info.label(() -> (Time.timeSinceMillis(startTime) / 60000) + ":" + Mathf.mod((int)Time.timeSinceMillis(startTime) / 1000, 60) + "." + Mathf.mod((int)Time.timeSinceMillis(startTime) / 100, 10));
             }).top().left();
         });
 

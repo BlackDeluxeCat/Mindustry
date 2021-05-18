@@ -27,14 +27,10 @@ public class ConsumeItemDynamic extends Consume{
 
     @Override
     public void build(Building tile, Table table){
-        ItemStack[][] current = {items.get(tile)};
 
         table.table(cont -> {
             table.update(() -> {
-                if(current[0] != items.get(tile)){
-                    rebuild(tile, cont);
-                    current[0] = items.get(tile);
-                }
+                rebuild(tile, cont);
             });
 
             rebuild(tile, cont);
@@ -46,7 +42,7 @@ public class ConsumeItemDynamic extends Consume{
         int i = 0;
 
         for(ItemStack stack : items.get(tile)){
-            table.add(new ReqImage(new ItemImage(stack.item.icon(Cicon.medium), stack.amount),
+            table.add(new ReqImage(new ItemImage(stack.item.icon(Cicon.medium), stack.amount, tile.items.get(stack.item)),
             () -> tile.items != null && tile.items.has(stack.item, stack.amount))).padRight(8).left();
             if(++i % 4 == 0) table.row();
         }

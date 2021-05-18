@@ -75,6 +75,8 @@ public class NuclearReactor extends PowerGenerator{
     public class NuclearReactorBuild extends GeneratorBuild{
         public float heat;
 
+        public Vec2[] hexPos = new Vec2[0];
+
         @Override
         public void updateTile(){
             ConsumeLiquid cliquid = consumes.get(ConsumeType.liquid);
@@ -160,7 +162,7 @@ public class NuclearReactor extends PowerGenerator{
         @Override
         public void drawLight(){
             float fract = productionEfficiency;
-            Drawf.light(team, x, y, (90f + Mathf.absin(5, 5f)) * fract, Tmp.c1.set(lightColor).lerp(Color.scarlet, heat), 0.6f * fract);
+            Drawf.light(team, x, y, 12f * fract, Tmp.c1.set(lightColor).lerp(Color.scarlet, heat), 0.6f * fract);
         }
 
         @Override
@@ -171,7 +173,7 @@ public class NuclearReactor extends PowerGenerator{
             Fill.rect(x, y, size * tilesize, size * tilesize);
 
             Draw.color(liquids.current().color);
-            Draw.alpha(liquids.currentAmount() / liquidCapacity);
+            Draw.alpha((liquids.currentAmount() / liquidCapacity)* 0.6f);
             Draw.rect(topRegion, x, y);
 
             if(heat > flashThreshold){
@@ -181,8 +183,25 @@ public class NuclearReactor extends PowerGenerator{
                 Draw.alpha(0.6f);
                 Draw.rect(lightsRegion, x, y);
             }
-
+            drawFuelRods();
             Draw.reset();
+        }
+
+        public void drawFuelRods(){
+            Item item = consumes.getItem().items[0].item;
+            int fuel = items.get(item);
+            Draw.color(item.color);
+            //Drawf.light(x, y, 12f, liquids.current().color, ((float)fuel / (float)itemCapacity));
+
+            float dx,dy;
+            for(int i = 0; i < fuel; i++){
+                dx = getHexPos(i + 6, 2f).x;
+                dy = getHexPos(i + 6, 2f).y;
+                Draw.alpha(0.8f);
+                Fill.poly(x + dx, y + dy, 6, 0.7f);
+                //Log.infoTag("Reactor", i + " | " + dx + "," + dy);
+                //Drawf.light(x + getHexPos(i + 6, 2f).x, y + getHexPos(i + 6, 2f).y, 4f, liquids.current().color, ((float)fuel / (float)itemCapacity) * 0.6f);
+            }
         }
 
         @Override
@@ -195,6 +214,59 @@ public class NuclearReactor extends PowerGenerator{
         public void read(Reads read, byte revision){
             super.read(read, revision);
             heat = read.f();
+        }
+
+        //fuel pods position
+        public Vec2 getHexPos(int posId, float gap){
+            if(hexPos.length != itemCapacity + 6){
+                genHexPos();
+            }
+            Vec2 v = new Vec2(hexPos[posId].x, hexPos[posId].y);
+            //Log.infoTag("Reactor", posId + " | " + v.x + "," + v.y);
+            v.scl(gap);
+            return v;
+        } 
+
+        public void genHexPos(){
+            hexPos = new Vec2[itemCapacity + 6];
+
+            float turnId;
+            float lineId;
+            float linepos;
+            Vec2 v = new Vec2();
+            for(int posId = 0; posId < itemCapacity + 6; posId++){
+                turnId = 0;
+                while(turnId * (turnId + 1f) * 3f <= (float)posId){
+                    turnId += 1f;
+                }
+                lineId = Mathf.floor(((float)posId - turnId * (turnId - 1f) * 3f) / (turnId));
+                linepos = Mathf.mod((float)posId - turnId * (turnId - 1f) * 3f, turnId);
+                
+                switch((int)lineId){
+        
+                    case 0:
+                    v.set(turnId / -2f + linepos, turnId / 2f * Mathf.sqrt3);
+                    break;
+                    case 1:
+                    v.set(turnId / 2f + linepos / 2f, (turnId - linepos) * Mathf.sqrt3 / 2f);
+                    break;
+                    case 2:
+                    v.set(turnId - linepos / 2f, (-linepos) * Mathf.sqrt3 / 2f);
+                    break;
+        
+                    case 3:
+                    v.set(turnId / 2f - linepos, -turnId / 2f * Mathf.sqrt3);
+                    break;
+                    case 4:
+                    v.set(-turnId / 2f - linepos / 2f, (-turnId + linepos) * Mathf.sqrt3 / 2f);
+                    break;
+                    case 5:
+                    v.set(- turnId + linepos / 2f, linepos * Mathf.sqrt3 / 2f);
+                }
+                hexPos[posId] = v.cpy();
+                //Log.infoTag("ReactorHex", posId + " | " + hexPos[posId].x + "," + hexPos[posId].y);
+            }
+
         }
     }
 }

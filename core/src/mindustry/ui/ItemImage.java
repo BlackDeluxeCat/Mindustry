@@ -8,6 +8,26 @@ import mindustry.type.*;
 
 public class ItemImage extends Stack{
 
+    public ItemImage(TextureRegion region, int reqAmount, int curAmount){
+
+        add(new Table(o -> {
+            o.left();
+            o.add(new Image(region)).size(32f);
+        }));
+
+        add(new Table(t -> {
+            t.left().bottom();
+            t.add(reqAmount + "").get().setFontScale(1f);
+            t.pack();
+        }));
+
+        add(new Table(t -> {
+            t.left().top();
+            t.add(curAmount + "").get().setFontScale(0.6f);
+            t.pack();
+        }));
+    }
+
     public ItemImage(TextureRegion region, int amount){
 
         add(new Table(o -> {
