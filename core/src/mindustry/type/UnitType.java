@@ -522,10 +522,11 @@ public class UnitType extends UnlockableContent{
             Draw.color(unit.team.color, 0.5f);
             Lines.line(unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f), unit.x + unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f));
             Lines.stroke(2f);
-            Draw.color(Pal.health, 0.3f);
+            /*Draw.color(Pal.health, 0.3f);
             Lines.line(
                 unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f), 
                 unit.x + unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f));
+                */
             Draw.color(Pal.health, 0.8f);
             Lines.line(
                 unit.x - unit.hitSize() * 0.6f, unit.y + (unit.hitSize() / 2f), 

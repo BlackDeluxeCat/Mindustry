@@ -828,6 +828,20 @@ abstract class BuildingComp implements Posc, Teamc, Healthc, Buildingc, Timerc, 
         return shouldConsume();
     }
 
+    // draw health bar by MI2, can be overrided
+    public void drawBars(){
+        Draw.z(Layer.shields + 4f);
+        Draw.color(team.color, 0.2f);
+        Lines.stroke(4f);
+        Lines.line(x - block.size * tilesize / 2f * 0.8f, y - block.size * tilesize / 2.5f, 
+            x + block.size * tilesize / 2f * 0.8f, y - block.size * tilesize / 2.5f);
+        Draw.color(Pal.health ,0.6f);
+        Lines.stroke(2f);
+        Lines.line(x - block.size * tilesize / 2f * 0.8f, y - block.size * tilesize / 2.5f, 
+            x + 0.8f * (Mathf.clamp(health / maxHealth, 0f, 1f) - 0.5f) * block.size * tilesize, y - block.size * tilesize / 2.5f);
+        Draw.color();
+    }
+
     public void drawStatus(){
         if(block.enableDrawStatus && block.consumes.any()){
             float multiplier = block.size > 1 ? 1 : 0.64f;

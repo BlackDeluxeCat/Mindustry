@@ -224,6 +224,12 @@ public class Turret extends ReloadTurret{
         @Override
         public void draw(){
             Draw.rect(baseRegion, x, y);
+
+            if(Core.settings.getBool("blockWeaponRange")){
+                Draw.z(Layer.turret - 1f);
+                Draw.color(team.color, 0.8f);
+                Lines.circle(x, y, range);
+            }
             Draw.z(Layer.turret);
             if(targetPos.x !=0 && targetPos.y != 0 && Core.settings.getBool("blockWeaponTargetLine") && Mathf.len(targetPos.x - x, targetPos.y - y) <= 1500f){
                 if(isShooting()){
@@ -247,6 +253,12 @@ public class Turret extends ReloadTurret{
             if(heatRegion != Core.atlas.find("error")){
                 heatDrawer.get(this);
             }
+        }
+
+        @Override
+        public void drawBars(){
+            super.drawBars();
+            
         }
 
         //show shoot target line

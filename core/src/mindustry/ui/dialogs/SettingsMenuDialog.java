@@ -471,6 +471,8 @@ public class SettingsMenuDialog extends SettingsDialog{
         graphics.checkPref("unitItemAmountAlwaysOn", false);
         graphics.sliderPref("unitTransparency",100,0,100,1, i -> i + "%");
         graphics.sliderPref("unitLegTransparency",100,0,100,1, i -> i + "%");
+        graphics.checkPref("blockBars", true);
+        graphics.checkPref("blockWeaponRange", true);
         graphics.checkPref("blockWeaponTargetLine", true);
         graphics.checkPref("blockWeaponTargetLineWhenIdle", true);
         graphics.checkPref("blockBridgeItem", true);

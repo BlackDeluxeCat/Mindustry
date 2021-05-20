@@ -268,6 +268,11 @@ public class BlockRenderer{
                         Draw.z(Layer.block);
                     }
 
+                    if(renderer.drawBars){
+                        entity.drawBars();
+                        Draw.z(Layer.block);
+                    }
+
                     if(entity.team != player.team()){
                         entity.drawTeam();
                         Draw.z(Layer.block);

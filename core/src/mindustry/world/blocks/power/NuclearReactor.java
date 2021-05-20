@@ -228,13 +228,13 @@ public class NuclearReactor extends PowerGenerator{
         } 
 
         public void genHexPos(){
-            hexPos = new Vec2[itemCapacity + 6];
+            hexPos = new Vec2[itemCapacity + 6 + 1];
 
             float turnId;
             float lineId;
             float linepos;
             Vec2 v = new Vec2();
-            for(int posId = 0; posId < itemCapacity + 6; posId++){
+            for(int posId = 0; posId < itemCapacity + 6 + 1; posId++){
                 turnId = 0;
                 while(turnId * (turnId + 1f) * 3f <= (float)posId){
                     turnId += 1f;

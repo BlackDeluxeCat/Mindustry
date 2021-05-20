@@ -390,7 +390,7 @@ public class Block extends UnlockableContent{
             }else{
                 current = entity -> entity.liquids == null ? Liquids.water : entity.liquids.current();
             }
-            bars.add("liquid", entity -> new Bar(() -> entity.liquids.get(current.get(entity)) <= 0.001f ? Core.bundle.get("bar.liquid") : current.get(entity).localizedName,
+            bars.add("liquid", entity -> new Bar(() -> entity.liquids.get(current.get(entity)) <= 0.001f ? Core.bundle.get("bar.liquid") : current.get(entity).localizedName + " " + (entity == null || entity.liquids == null ? 0f : (int)(entity.liquids.get(current.get(entity)) * 100f) / 100f + "/" + liquidCapacity),
             () -> current.get(entity).barColor(), () -> entity == null || entity.liquids == null ? 0f : entity.liquids.get(current.get(entity)) / liquidCapacity));
         }
 
