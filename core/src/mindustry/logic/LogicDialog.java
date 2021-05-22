@@ -81,6 +81,8 @@ public class LogicDialog extends BaseDialog{
             dialog.show();
         }).disabled(t -> canvas.statements.getChildren().size >= LExecutor.maxInstructions);
 
+        buttons.button(Icon.refresh, () -> canvas.rebuild());
+
         add(canvas).grow().name("canvas");
 
         row();
