@@ -61,7 +61,7 @@ public class ReloadTurret extends BaseTurret{
         public void displayBars(Table bars){
             super.displayBars(bars);
             //bar for shoot cd
-            bars.add(new Bar(() -> Core.bundle.format("stat.reload", (int)(reload * 100 / reloadTime)), () -> Pal.ammo, () -> (float)(reload / reloadTime)));
+            bars.add(new Bar(() -> Core.bundle.format("stat.reloadDetail", (int)(reload * 100 / reloadTime)), () -> Pal.ammo, () -> (float)(reload / reloadTime)));
             bars.row();
         }
     }

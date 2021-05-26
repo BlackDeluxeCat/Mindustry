@@ -23,6 +23,8 @@ import mindustry.world.blocks.payloads.*;
 import mindustry.world.consumers.*;
 import mindustry.world.meta.*;
 
+import static mindustry.Vars.*;
+
 public class UnitFactory extends UnitBlock{
     public int[] capacities = {};
 
@@ -183,6 +185,20 @@ public class UnitFactory extends UnitBlock{
         @Override
         public Object config(){
             return currentPlan;
+        }
+
+        @Override
+        public void drawBars(){
+            super.drawBars();
+            Draw.color(Color.black, 0.3f);
+            Lines.stroke(4f);
+            Lines.line(x - block.size * tilesize / 2f * 0.6f, y + block.size * tilesize / 2.5f, 
+                x + block.size * tilesize / 2f * 0.6f, y + block.size * tilesize / 2.5f);
+            Draw.color(Pal.accent, 1f);
+            Lines.stroke(2f);
+            Lines.line(x - block.size * tilesize / 2f * 0.6f, y + block.size * tilesize / 2.5f, 
+                x + 0.6f * (Mathf.clamp(fraction(), 0f, 1f) - 0.5f) * block.size * tilesize, y + block.size * tilesize / 2.5f);
+            Draw.color();
         }
 
         @Override

@@ -481,6 +481,7 @@ public class SettingsMenuDialog extends SettingsDialog{
         graphics.checkPref("keepPanViewInMove", true);
 
         graphics.checkPref("showFloatingSettings", false);
+        graphics.sliderPref("effectScl",100,0,100,1, i -> i + "%");
     }
 
     public void exportData(Fi file) throws IOException{

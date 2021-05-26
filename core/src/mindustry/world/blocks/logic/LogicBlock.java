@@ -1,6 +1,8 @@
 package mindustry.world.blocks.logic;
 
 import arc.func.*;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Lines;
 import arc.math.geom.*;
 import arc.scene.ui.layout.*;
 import arc.struct.Bits;
@@ -472,10 +474,12 @@ public class LogicBlock extends Block{
             }
 
             //draw top text on separate layer
+            //draw link order - MI2
+            int poi = 0;
             for(LogicLink l : links){
                 Building build = world.build(l.x, l.y);
                 if(l.active && validLink(build)){
-                    build.block.drawPlaceText(l.name, build.tileX(), build.tileY(), true);
+                    build.block.drawPlaceText(l.name + " [" + poi++ + "]", build.tileX(), build.tileY(), true);
                 }
             }
         }
@@ -484,6 +488,9 @@ public class LogicBlock extends Block{
         public void drawSelect(){
             Groups.unit.each(u -> u.controller() instanceof LogicAI ai && ai.controller == this, unit -> {
                 Drawf.square(unit.x, unit.y, unit.hitSize, unit.rotation + 45);
+                Draw.color(Pal.accent, (unit == executor.obj(LExecutor.varUnit)) ? 1f : 0.1f);
+                Lines.line(x, y, unit.x, unit.y);
+                Draw.color();
             });
         }
 

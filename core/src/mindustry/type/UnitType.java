@@ -178,12 +178,12 @@ public class UnitType extends UnlockableContent{
         table.table(bars -> {
             bars.defaults().growX().height(20f).pad(4);
             bars.add(new Bar(() -> {
-                return unit.health + " / " + unit.maxHealth + " (" + (int)(100 * unit.health / unit.maxHealth) + "%)";
+                return unit.health + "/" + unit.maxHealth + " (" + (int)(100 * unit.health / unit.maxHealth) + "%)";
             }, () -> Pal.health, unit::healthf).blink(Color.white));
             bars.row();
 
             if(state.rules.unitAmmo){
-                bars.add(new Bar(() -> ammoType.icon + " " + Core.bundle.get("stat.ammo") + (int)unit.ammo + " / " + ammoCapacity, () -> ammoType.barColor, () -> unit.ammo / ammoCapacity));
+                bars.add(new Bar(() -> ammoType.icon + " " + Core.bundle.format("stat.ammoDetail", unit.ammo, ammoCapacity), () -> ammoType.barColor, () -> unit.ammo / ammoCapacity));
                 bars.row();
             }
 
@@ -580,7 +580,7 @@ public class UnitType extends UnlockableContent{
             if(Core.settings.getBool("unitLogicTimerBars")){
 
                 Lines.stroke(2f);
-                Draw.color(Pal.health);
+                Draw.color(Pal.heal);
                 Lines.line(unit.x - (unit.hitSize() / 2f), unit.y - (unit.hitSize() / 2f), unit.x - (unit.hitSize() / 2f), unit.y + unit.hitSize() * (logicai.controlTimer / logicai.logicControlTimeout - 0.5f));
 
                 Lines.stroke(2f);

@@ -89,7 +89,7 @@ public class ItemTurret extends Turret{
         public void displayBars(Table bars){
             super.displayBars(bars);
 
-            bars.add(new Bar("stat.ammo" + totalAmmo, Pal.ammo, () -> (float)totalAmmo / maxAmmo)).growX();
+            bars.add(new Bar(() -> Core.bundle.format("stat.ammoDetail", totalAmmo, maxAmmo), () -> Pal.ammo, () -> (float)totalAmmo / maxAmmo)).growX();
             bars.row();
         }
 

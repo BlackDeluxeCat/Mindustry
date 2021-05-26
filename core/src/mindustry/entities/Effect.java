@@ -135,7 +135,7 @@ public class Effect{
 
     public static void create(Effect effect, float x, float y, float rotation, Color color, Object data){
         if(headless || effect == Fx.none) return;
-        if(Core.settings.getBool("effects")){
+        if(Core.settings.getBool("effects") && Mathf.chance(Core.settings.getInt("effectScl") / 100f)){
             Rect view = Core.camera.bounds(Tmp.r1);
             Rect pos = Tmp.r2.setSize(effect.clip).setCenter(x, y);
 

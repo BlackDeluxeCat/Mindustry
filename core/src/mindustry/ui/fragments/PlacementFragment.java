@@ -480,7 +480,8 @@ public class PlacementFragment extends Fragment{
         //check for a unit
         //don't consider team anymore
         Unit unit1 = Units.closestOverlap(Core.input.mouseWorldX(), Core.input.mouseWorldY(), 5f, u -> !u.isLocal());
-        Unit unit2 = Units.closestOverlap(Core.input.mouseWorldX(), Core.input.mouseWorldY(), 2f, u -> !u.isLocal());
+        //make player unit displayable
+        Unit unit2 = Units.closestOverlap(Core.input.mouseWorldX(), Core.input.mouseWorldY(), 2f, u -> true || !u.isLocal());
         //if cursor has a unit, display it
         //accurate hover
         if(unit2 != null) return unit2;

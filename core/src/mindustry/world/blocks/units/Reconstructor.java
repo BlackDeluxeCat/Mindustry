@@ -1,6 +1,7 @@
 package mindustry.world.blocks.units;
 
 import arc.*;
+import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.struct.*;
@@ -47,7 +48,9 @@ public class Reconstructor extends UnitBlock{
     public void setBars(){
         super.setBars();
 
-        bars.add("progress", (ReconstructorBuild e) -> new Bar(() -> Core.bundle.format("bar.unitprogress", Strings.fixed(e.progress * 100f / constructTime, 0), Strings.fixed((constructTime - e.progress) / (60f * Vars.state.rules.unitBuildSpeedMultiplier), 0)), () -> Pal.ammo, e::fraction));
+        bars.add("progress", 
+            (ReconstructorBuild e) -> new Bar(() -> Core.bundle.format("bar.unitprogress", Strings.fixed(e.progress * 100f / constructTime, 0), Strings.fixed((constructTime - e.progress) / (60f * Vars.state.rules.unitBuildSpeedMultiplier * e.timeScale), 0)), 
+            () -> Pal.ammo, e::fraction));
         bars.add("units", (ReconstructorBuild e) ->
         new Bar(
             () -> e.unit() == null ? "[lightgray]" + Iconc.cancel :
@@ -155,6 +158,20 @@ public class Reconstructor extends UnitBlock{
 
             Draw.z(Layer.blockOver + 0.1f);
             Draw.rect(topRegion, x, y);
+        }
+
+        @Override
+        public void drawBars(){
+            super.drawBars();
+            Draw.color(Color.black, 0.3f);
+            Lines.stroke(4f);
+            Lines.line(x - block.size * tilesize / 2f * 0.6f, y + block.size * tilesize / 2.5f, 
+                x + block.size * tilesize / 2f * 0.6f, y + block.size * tilesize / 2.5f);
+            Draw.color(Pal.accent, 1f);
+            Lines.stroke(2f);
+            Lines.line(x - block.size * tilesize / 2f * 0.6f, y + block.size * tilesize / 2.5f, 
+                x + 0.6f * (Mathf.clamp(fraction(), 0f, 1f) - 0.5f) * block.size * tilesize, y + block.size * tilesize / 2.5f);
+            Draw.color();
         }
 
         @Override

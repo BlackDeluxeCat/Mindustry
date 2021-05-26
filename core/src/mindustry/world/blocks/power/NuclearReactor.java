@@ -221,6 +221,7 @@ public class NuclearReactor extends PowerGenerator{
             if(hexPos.length != itemCapacity + 6){
                 genHexPos();
             }
+            if(posId >= itemCapacity + 6) return new Vec2(0f, 0f);
             Vec2 v = new Vec2(hexPos[posId].x, hexPos[posId].y);
             //Log.infoTag("Reactor", posId + " | " + v.x + "," + v.y);
             v.scl(gap);
@@ -228,13 +229,13 @@ public class NuclearReactor extends PowerGenerator{
         } 
 
         public void genHexPos(){
-            hexPos = new Vec2[itemCapacity + 6 + 1];
+            hexPos = new Vec2[itemCapacity + 6];
 
             float turnId;
             float lineId;
             float linepos;
             Vec2 v = new Vec2();
-            for(int posId = 0; posId < itemCapacity + 6 + 1; posId++){
+            for(int posId = 0; posId < itemCapacity + 6; posId++){
                 turnId = 0;
                 while(turnId * (turnId + 1f) * 3f <= (float)posId){
                     turnId += 1f;
