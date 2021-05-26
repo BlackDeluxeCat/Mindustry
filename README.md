@@ -1,3 +1,59 @@
+# MI2 Custom Client | MI2端
+
+主要修改原版显示和界面。
+
+Mainly modify vanilla display and UI.
+
+## Update & Release
+
+自行构建最新测试版本（可体验最新特性），可能存在大量bug。
+
+Release版在原版的更新发布后发布（需要从原版同步内容）。所具有的特性经过测试，应该比较稳定。
+
+_第一个release预计在v127后发布。_
+
+Compile the lastest alpha build on your own, may with many potential bugs.
+
+Release build follows the tag in origin repositoriy. Its new features has been tested for times and should be much more stable. 
+
+_First release build will be done when Mindustry v127 is available._
+
+## Features
+* 界面
+  * 左侧：全队伍资源和单位统计
+  * 左上：地图信息+波次信息栏，其他调整
+  * 右上：小地图尺寸可调，可点击跳转视角，其他调整
+  * 右上：快捷设置界面，有部分常用设置
+  * 右下：信息更多更详细，可同时显示方块和单位，其他调整
+  * 玩家列表：舒适的布局，增加跳转视角按钮
+  * 聊天栏：记录发言玩家临时id和位置
+  * 逻辑编辑器：显示指令地址
+* 画面
+  * 可设置的大量辅助线
+  * 桥带和连接器的物品显示
+  * 单位血条（及更多）和状态显示
+  * 建筑血条（及更多）
+  * 钍反应堆贴图修改，渲染燃料棒
+  * 可设置单位透明度和单位腿部透明度
+  * 可设置的平移视角移动速度
+  * 可设置让跟随视角的玩家不在屏幕中央
+* 游戏性
+  * 蓝图大小限制提高
+  * 解除跳波限制
+  * 解除敌对信息的屏蔽
+* 其他
+  * 地图编辑器
+    * 解除对实验特性的限制
+    * 新增过滤器Point Symmetry（中心对称）：便于快速制作中心对称地图
+
+## Changelog
+
+See [Changelog](core/assets/changelog.txt) (cn)
+
+En is not available bcus I'm lazy.
+
+# ANUKEN!
+
 ![Logo](core/assets-raw/sprites/ui/logo.png)
 
 [![Build Status](https://github.com/Anuken/Mindustry/workflows/Tests/badge.svg?event=push)](https://github.com/Anuken/Mindustry/actions)
