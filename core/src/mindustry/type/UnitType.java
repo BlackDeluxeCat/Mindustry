@@ -165,6 +165,12 @@ public class UnitType extends UnlockableContent{
         bars.row();
         bars.add(new Bar(() -> "S:" + unit.shield() + " A:" + unit.armor() + (unit.isBoss() ? " (Boss)" : ""), () -> Pal.accent, () -> 1f));
         bars.row();
+        for(StatusEffect eff : Vars.content.statusEffects()){
+            if(unit.hasEffect(eff)){
+                bars.add(new Bar(() -> eff.emoji() + eff.name + ": " + ((unit.getEffectTime(eff) < 0f)? "Inf":(int)unit.getEffectTime(eff)/60f), () -> Pal.accent, () -> 1f));
+                bars.row();
+            }
+        }
     }
 
     public void display(Unit unit, Table table){
@@ -205,8 +211,6 @@ public class UnitType extends UnlockableContent{
                 bars.row();
             }
             displayStatus(unit, bars);
-
-            
 
         }).growX();
 

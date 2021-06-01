@@ -364,7 +364,11 @@ public class HudFragment extends Fragment{
                 }
                 info.row();
 
-                info.label(() -> (Time.timeSinceMillis(startTime) / 60000) + " : " + Mathf.mod((int)Time.timeSinceMillis(startTime) / 1000, 60) + " . " + Mathf.mod((int)Time.timeSinceMillis(startTime) / 100, 10));
+                info.label(() -> "Scale: " + Vars.renderer.getScale()).left().style(Styles.outlineLabel);
+
+                info.row();
+
+                info.label(() -> (Time.timeSinceMillis(startTime) / 60000) + " : " + Mathf.mod((int)Time.timeSinceMillis(startTime) / 1000, 60) + "." + Mathf.mod((int)Time.timeSinceMillis(startTime) / 100, 10)).left().style(Styles.outlineLabel);
                 
                 info.row();
 
