@@ -172,6 +172,7 @@ public class Reconstructor extends UnitBlock{
             Lines.line(x - block.size * tilesize / 2f * 0.6f, y + block.size * tilesize / 2.5f, 
                 x + 0.6f * (Mathf.clamp(fraction(), 0f, 1f) - 0.5f) * block.size * tilesize, y + block.size * tilesize / 2.5f);
             Draw.color();
+            this.block.drawText((int)(Mathf.clamp(fraction(), 0f, 1f) * 100) + "% | " + Strings.fixed((constructTime - progress) / (60f * Vars.state.rules.unitBuildSpeedMultiplier * timeScale), 0), x, y + block.size * tilesize / 2.5f - 5f, true, 0.9f);
         }
 
         @Override

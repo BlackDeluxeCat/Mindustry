@@ -309,6 +309,33 @@ public class Block extends UnlockableContent{
         return width;
     }
 
+    public float drawText(String text, float x, float y, boolean valid, float scl){
+        if(renderer.pixelator.enabled()) return 0;
+
+        Color color = valid ? Pal.accent : Pal.remove;
+        Font font = Fonts.outline;
+        GlyphLayout layout = Pools.obtain(GlyphLayout.class, GlyphLayout::new);
+        boolean ints = font.usesIntegerPositions();
+        font.setUseIntegerPositions(false);
+        font.getData().setScale(1f / 4f / Scl.scl(1f) * scl);
+        layout.setText(font, text);
+
+        float width = layout.width;
+
+        font.setColor(color);
+        float dx = x, dy = y;
+        font.draw(text, dx, dy + layout.height + 1, Align.center);
+        dy -= 1f;
+
+        font.setUseIntegerPositions(ints);
+        font.setColor(Color.white);
+        font.getData().setScale(1f);
+        Draw.reset();
+        Pools.free(layout);
+
+        return width;
+    }
+
     public float sumAttribute(@Nullable Attribute attr, int x, int y){
         if(attr == null) return 0;
         Tile tile = world.tile(x, y);

@@ -69,7 +69,7 @@ public class UnitFactory extends UnitBlock{
     @Override
     public void setBars(){
         super.setBars();
-        bars.add("progress", (UnitFactoryBuild e) -> new Bar(() -> Core.bundle.format("bar.unitprogress", Strings.fixed(e.progress * 100f / plans.get(e.currentPlan).time, 0), Strings.fixed((plans.get(e.currentPlan).time - e.progress) / (60f * Vars.state.rules.unitBuildSpeedMultiplier), 0)), () -> Pal.ammo, e::fraction));
+        bars.add("progress", (UnitFactoryBuild e) -> new Bar(() -> Core.bundle.format("bar.unitprogress", Strings.fixed(e.progress * 100f / plans.get(e.currentPlan).time, 0), Strings.fixed((plans.get(e.currentPlan).time - e.progress) / (60f * Vars.state.rules.unitBuildSpeedMultiplier * e.timeScale), 0)), () -> Pal.ammo, e::fraction));
 
         bars.add("units", (UnitFactoryBuild e) ->
         new Bar(
@@ -199,6 +199,7 @@ public class UnitFactory extends UnitBlock{
             Lines.line(x - block.size * tilesize / 2f * 0.6f, y + block.size * tilesize / 2.5f, 
                 x + 0.6f * (Mathf.clamp(fraction(), 0f, 1f) - 0.5f) * block.size * tilesize, y + block.size * tilesize / 2.5f);
             Draw.color();
+            this.block.drawText((int)(Mathf.clamp(fraction(), 0f, 1f) * 100) + "% | " + (currentPlan == -1 ? "@none" : Strings.fixed((plans.get(currentPlan).time - progress) / (60f * Vars.state.rules.unitBuildSpeedMultiplier * timeScale), 0)), x, y + block.size * tilesize / 2.5f - 5f, true, 0.9f);
         }
 
         @Override
