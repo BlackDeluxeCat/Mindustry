@@ -34,7 +34,7 @@ public class Renderer implements ApplicationListener{
     public FrameBuffer effectBuffer = new FrameBuffer();
     public boolean animateShields, drawWeather = true, drawStatus, drawBars;
     /** minZoom = zooming out, maxZoom = zooming in */
-    public float minZoom = 1.5f, maxZoom = 6f;
+    public float minZoom = 0.5f, maxZoom = 12f;
 
     private @Nullable CoreBuild landCore;
     private Color clearColor = new Color(0f, 0f, 0f, 1f);
@@ -68,7 +68,7 @@ public class Renderer implements ApplicationListener{
     public void update(){
         Color.white.set(1f, 1f, 1f, 1f);
 
-        float dest = Mathf.round(targetscale, 0.5f);
+        float dest = Mathf.round(targetscale, 0.05f);
         camerascale = Mathf.lerpDelta(camerascale, dest, 0.1f);
         if(Mathf.equal(camerascale, dest, 0.001f)) camerascale = dest;
         laserOpacity = settings.getInt("lasersopacity") / 100f;
@@ -278,6 +278,11 @@ public class Renderer implements ApplicationListener{
 
     public void scaleCamera(float amount){
         targetscale *= (amount / 4) + 1;
+        clampScale();
+    }
+
+    public void scaleCameraLinear(float amount){
+        targetscale = 6 / ((6 / targetscale) - (amount / 4));
         clampScale();
     }
 
