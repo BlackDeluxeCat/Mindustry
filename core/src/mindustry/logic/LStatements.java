@@ -738,8 +738,6 @@ public class LStatements{
             }, Styles.logict, () -> {}).size(op == ConditionOp.always ? 80f : 48f, 40f).pad(4f).color(table.color);
 
             if(op != ConditionOp.always) field(table, compare, str -> compare = str);
-
-            table.add(" jump to " + destIndex + "");
         }
 
         //elements need separate conversion logic

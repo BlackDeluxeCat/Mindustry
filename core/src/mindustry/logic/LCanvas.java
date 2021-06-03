@@ -217,11 +217,7 @@ public class LCanvas extends Table{
 
                 e.setSize(width, e.getPrefHeight());
                 e.setPosition(0, height - cy, Align.topLeft);
-                //statement bar pointer update
-                if(e instanceof StatementElem se){
-                    //TODO use a more effecient method to set text
-                    se.pointerLabel.setText(i + "");
-                }
+
                 cy += e.getPrefHeight() + space;
                 seq.add(e);
             }
@@ -320,7 +316,6 @@ public class LCanvas extends Table{
 
     public class StatementElem extends Table{
         public LStatement st;
-        public Label pointerLabel;
 
         public StatementElem(LStatement st){
             this.st = st;
@@ -340,8 +335,6 @@ public class LCanvas extends Table{
 
                 t.add(st.name()).style(Styles.outlineLabel).color(color).padRight(8);
                 t.add().growX();
-
-                pointerLabel = t.add("").style(Styles.outlineLabel).color(color).padRight(8).get();
 
                 t.button(Icon.copy, Styles.logici, () -> {
                 }).size(24f).padRight(6).get().tapped(this::copy);
@@ -470,7 +463,6 @@ public class LCanvas extends Table{
                         setter.get(null);
                     }
                     selecting = false;
-                    canvas.rebuild();
                 }
             });
 
