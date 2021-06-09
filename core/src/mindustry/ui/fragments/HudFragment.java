@@ -43,6 +43,7 @@ public class HudFragment extends Fragment{
     private ImageButton flip;
     private CoreItemsDisplay coreItems = new CoreItemsDisplay();
     private OtherCoreItemDisplay otherCoreItemDisplay = new OtherCoreItemDisplay(); //shugen002's display
+    private MapInfoTable mapInfoTable = new MapInfoTable();
 
     private String hudText = "";
     private boolean showHudText;
@@ -284,64 +285,11 @@ public class HudFragment extends Fragment{
             editorMain.visible(() -> shown && state.isEditor());
 
             //map info/nextwave display
-            cont.table(Tex.buttonEdge4, infoWave -> {
+            cont.table(Tex.buttonRed, infoWave -> {
                 infoWave.name = "map/wave";
                 infoWave.left().top().margin(3).visible(() -> shown);
-                infoWave.table().update(t -> {
-                    t.clear();
-                    t.left();
-
-                    t.label(() -> "" + Iconc.statusBurning).get().setColor((state.rules.fire?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-                    t.label(() -> "" + Iconc.itemBlastCompound).get().setColor((state.rules.damageExplosions?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-                    t.label(() -> "" + Iconc.blockThoriumReactor).get().setColor((state.rules.reactorExplosions?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-                    t.label(() -> "" + Iconc.itemCopper).get().setColor((state.rules.unitAmmo?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-                    t.label(() -> "" + Iconc.blockCoreShard).get().setColor((state.rules.unitCapVariable?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-                    t.row();
-
-                    t.label(() -> "" + Iconc.blockMicroProcessor).get().setColor((state.rules.logicUnitBuild?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-                    t.label(() -> "" + Iconc.blockIlluminator).get().setColor((state.rules.lighting?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-                    t.label(() -> "" + Iconc.blockIncinerator).get().setColor((state.rules.coreIncinerates?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-                    t.label(() -> "" + Iconc.paste).get().setColor((state.rules.schematicsAllowed?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-                    t.label(() -> "MI2").get().setFontScale(0.5f);
-                    t.label(() -> "a18").get().setFontScale(0.5f);
-                    t.row();
-
-                    t.label(() -> "BHp ").get().setFontScale(0.5f);
-                    t.label(() -> "BDmg ").get().setFontScale(0.5f);
-                    t.label(() -> "UDmg ").get().setFontScale(0.5f);
-                    t.label(() -> "BCost ").get().setFontScale(0.5f);
-                    t.label(() -> "BSpd ").get().setFontScale(0.5f);
-                    t.label(() -> "BRe ").get().setFontScale(0.5f);
-                    t.label(() -> "USpd ").get().setFontScale(0.5f);
-                    t.row();
-
-                    t.label(() -> " " + (state.rules.blockHealthMultiplier)).get().setFontScale(0.5f);
-                    t.label(() -> " " + (state.rules.blockDamageMultiplier)).get().setFontScale(0.5f);
-                    t.label(() -> " " + (state.rules.unitDamageMultiplier)).get().setFontScale(0.5f);
-                    t.label(() -> " " + (state.rules.buildCostMultiplier)).get().setFontScale(0.5f);
-                    t.label(() -> " " + (state.rules.buildSpeedMultiplier)).get().setFontScale(0.5f);
-                    t.label(() -> " " + (state.rules.deconstructRefundMultiplier)).get().setFontScale(0.5f);
-                    t.label(() -> " " + (state.rules.unitBuildSpeedMultiplier)).get().setFontScale(0.5f);
-                    t.row();
-                    for(SpawnGroup group : state.rules.spawns){
-                        if(group.getSpawned(state.wave - 1) > 0){
-                            t.label(() -> group.type.emoji()); 
-                        }
-                    }
-                    t.row();
-                    for(SpawnGroup group : state.rules.spawns){
-                        if(group.getSpawned(state.wave - 1) > 0){
-                            t.label(() -> " " + group.getSpawned(state.wave - 1) + " ").get().setFontScale(0.5f); 
-                        }
-                    }
-                    t.row();
-                    for(SpawnGroup group : state.rules.spawns){
-                        if(group.getSpawned(state.wave - 1) > 0){
-                            t.label(() -> " " + (int)group.getShield(state.wave - 1) + " ").get().setFontScale(0.5f); 
-                        }
-                    }
-                });
-            }).fillY();
+                infoWave.add(mapInfoTable);
+            }).left().top();
 
 
             //fps display
