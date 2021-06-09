@@ -291,17 +291,17 @@ public class HudFragment extends Fragment{
                     t.clear();
                     t.left();
 
-                    t.label(() -> "" + (state.rules.fire?(Iconc.statusBurning):""));
-                    t.label(() -> "" + (state.rules.damageExplosions?(Iconc.itemBlastCompound):""));
-                    t.label(() -> "" + (state.rules.reactorExplosions?(Iconc.blockThoriumReactor):""));
-                    t.label(() -> "" + (state.rules.unitAmmo?(Iconc.itemCopper):""));
-                    t.label(() -> "" + (state.rules.unitCapVariable?(Iconc.blockCoreShard):""));
+                    t.label(() -> "" + Iconc.statusBurning).get().setColor((state.rules.fire?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                    t.label(() -> "" + Iconc.itemBlastCompound).get().setColor((state.rules.damageExplosions?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                    t.label(() -> "" + Iconc.blockThoriumReactor).get().setColor((state.rules.reactorExplosions?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                    t.label(() -> "" + Iconc.itemCopper).get().setColor((state.rules.unitAmmo?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                    t.label(() -> "" + Iconc.blockCoreShard).get().setColor((state.rules.unitCapVariable?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
                     t.row();
 
-                    t.label(() -> "" + (state.rules.logicUnitBuild?(Iconc.blockMicroProcessor):""));
-                    t.label(() -> "" + (state.rules.lighting?(Iconc.blockIlluminator):""));
-                    t.label(() -> "" + (state.rules.coreIncinerates?(Iconc.blockIncinerator):""));
-                    t.label(() -> "" + (state.rules.schematicsAllowed?(Iconc.paste):""));
+                    t.label(() -> "" + Iconc.blockMicroProcessor).get().setColor((state.rules.logicUnitBuild?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                    t.label(() -> "" + Iconc.blockIlluminator).get().setColor((state.rules.lighting?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                    t.label(() -> "" + Iconc.blockIncinerator).get().setColor((state.rules.coreIncinerates?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                    t.label(() -> "" + Iconc.paste).get().setColor((state.rules.schematicsAllowed?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
                     t.label(() -> "MI2").get().setFontScale(0.5f);
                     t.label(() -> "a18").get().setFontScale(0.5f);
                     t.row();
