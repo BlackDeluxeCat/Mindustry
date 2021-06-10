@@ -6,13 +6,13 @@ Mainly modify vanilla display and UI.
 
 ## Update & Release
 
-自行构建最新测试版本（可体验最新特性），可能存在大量bug。
+自行构建最新测试版本（可体验最新特性），可能存在大量bug。请勿传播自行编译端。
 
 Release版在原版的更新发布后发布（需要从原版同步内容）。所具有的特性经过测试，应该比较稳定。
 
 _第一个release预计在v127后发布。_
 
-Compile the lastest alpha build on your own, may with many potential bugs.
+Compile the lastest alpha build on your own, may with many potential bugs. 
 
 Release build follows the tag in origin repositoriy. Its new features has been tested for times and should be much more stable. 
 

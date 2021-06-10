@@ -19,7 +19,9 @@ configurations{ natives }
 
 repositories{
     mavenCentral()
-    maven{ url "https://maven.google.com" }
+    //maven{ url "https://maven.google.com" }
+    //available url in China
+    maven{ url "https://dl.google.com/dl/android/maven2/" }
     jcenter() //remove later once google fixes the dependency
 }
 
@@ -34,7 +36,7 @@ dependencies{
     natives "com.github.Anuken.Arc:natives-box2d-android:${getArcHash()}"
 
     //android dependencies magically disappear during compilation, thanks gradle!
-    def sdkFile = new File((String)findSdkDir(), "/platforms/android-29/android.jar")
+    def sdkFile = new File((String)findSdkDir(), "/platforms/android-30/android.jar")
     if(sdkFile.exists()) compileOnly files(sdkFile.absolutePath)
 }
 
@@ -47,8 +49,8 @@ task deploy(type: Copy){
 }
 
 android{
-    buildToolsVersion '29.0.3'
-    compileSdkVersion 29
+    buildToolsVersion '30.0.3'
+    compileSdkVersion 30
     sourceSets{
         main{
             manifest.srcFile 'AndroidManifest.xml'
@@ -73,7 +75,7 @@ android{
 
         applicationId "io.anuke.mindustry"
         minSdkVersion 14
-        targetSdkVersion 29
+        targetSdkVersion 30
         
         versionName versionNameResult
         versionCode = (System.getenv("TRAVIS_BUILD_ID") != null ? System.getenv("TRAVIS_BUILD_ID").toInteger() : vcode)
