@@ -2,17 +2,22 @@ package mindustry.ui;
 
 import static mindustry.Vars.*;
 
-import arc.graphics.Color;
-import arc.scene.ui.Label;
-import arc.scene.ui.layout.*;
-import arc.util.Align;
-import mindustry.game.SpawnGroup;
-import mindustry.gen.Iconc;
+import java.text.BreakIterator;
 
-public class MapInfoTable extends Table{
+import arc.graphics.*;
+import arc.math.Mathf;
+import arc.scene.ui.*;
+import arc.scene.ui.layout.*;
+import arc.util.*;
+import mindustry.entities.units.*;
+import mindustry.game.*;
+import mindustry.game.Teams.*;
+import mindustry.gen.*;
+
+public class MI2ToolsTable extends Table{
     public int waveOffset = 0;
 
-    public MapInfoTable(){
+    public MI2ToolsTable(){
         rebuild();
     }
 
@@ -33,7 +38,7 @@ public class MapInfoTable extends Table{
             t.label(() -> "" + Iconc.blockIlluminator).get().setColor((state.rules.lighting?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
             t.label(() -> "" + Iconc.blockIncinerator).get().setColor((state.rules.coreIncinerates?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
             t.label(() -> "" + Iconc.paste).get().setColor((state.rules.schematicsAllowed?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-            t.label(() -> + state.map.width + "x" + state.map.height).colspan(3).get().setFontScale(0.6f);
+            t.label(() -> world != null ? (world.width() + "x" + world.height()):"ohno").colspan(3).get().setFontScale(0.6f);
             t.add("MI2").get().setFontScale(0.6f);
             t.add("a19").get().setFontScale(0.6f);
         }).left();
@@ -57,6 +62,25 @@ public class MapInfoTable extends Table{
             t.label(() -> " " + (state.rules.buildSpeedMultiplier)).get().setFontScale(0.6f);
             t.label(() -> " " + (state.rules.deconstructRefundMultiplier)).get().setFontScale(0.6f);
             t.label(() -> " " + (state.rules.unitBuildSpeedMultiplier)).get().setFontScale(0.6f);
+        }).left();
+
+        row();
+
+        table(t -> {
+            t.label(() -> "Wave " + (state.wave + waveOffset)).get().setFontScale(1f);
+
+            t.button("<", () -> {
+                waveOffset -= 1;
+                if(waveOffset < 0) waveOffset = 0;
+            }).maxSize(36f, 36f);
+
+            t.button("○", () -> {
+                waveOffset = 0;
+            }).maxSize(36f, 36f);
+
+            t.button(">", () -> {
+                waveOffset += 1;
+            }).maxSize(36f, 36f);
         }).left();
 
         row();
@@ -88,21 +112,32 @@ public class MapInfoTable extends Table{
         row();
 
         table(t -> {
-            t.button("<", () -> {
-                waveOffset -= 1;
-                if(waveOffset < 0) waveOffset = 0;
-            });
+            t.button(Icon.refreshSmall, () -> {
+                Call.sendChatMessage("/sync");
+            }).maxSize(40f, 40f);
 
-            t.button("○", () -> {
-                waveOffset = 0;
-            });
+            t.button("BP", () -> {
+                if(!player.unit().canBuild() || state.rules.mode() == Gamemode.pvp) return;
+                int p = 0;
+                for(BlockPlan block : state.teams.get(player.team()).blocks){
+                    if(Mathf.len(block.x - player.tileX(), block.y - player.tileY()) >= 100) continue;
+                    p++;
+                    if(p > 255) break;
+                    player.unit().addBuild(new BuildPlan(block.x, block.y, block.rotation, content.block(block.block), block.config));
+                }
+            }).maxSize(40f, 40f);
 
-            t.button(">", () -> {
-                waveOffset += 1;
-            });
-
-            t.label(() -> "Wave " + (state.wave + waveOffset)).get().setFontScale(1f);
         }).left();
+
+        row();
+
+        table(t -> {
+            t.label(() -> "Time: " + state.stats.timeLasted + 
+            "\nBuilt: " + state.stats.buildingsBuilt + 
+            "\nDeconstructed: " + state.stats.buildingsDeconstructed + 
+            "\nDestoryed: " + state.stats.buildingsDestroyed).get().setFontScale(0.6f);
+        }).left().get().setScale(0.5f);
+
     }
 
 }

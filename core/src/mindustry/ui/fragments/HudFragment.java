@@ -43,7 +43,7 @@ public class HudFragment extends Fragment{
     private ImageButton flip;
     private CoreItemsDisplay coreItems = new CoreItemsDisplay();
     private OtherCoreItemDisplay otherCoreItemDisplay = new OtherCoreItemDisplay(); //shugen002's display
-    private MapInfoTable mapInfoTable = new MapInfoTable();
+    private MI2ToolsTable mi2ToolsTable = new MI2ToolsTable();
 
     private String hudText = "";
     private boolean showHudText;
@@ -285,10 +285,10 @@ public class HudFragment extends Fragment{
             editorMain.visible(() -> shown && state.isEditor());
 
             //map info/nextwave display
-            cont.table(Tex.buttonRed, infoWave -> {
+            cont.table(Tex.button, infoWave -> {
                 infoWave.name = "map/wave";
                 infoWave.left().top().margin(3).visible(() -> shown);
-                infoWave.add(mapInfoTable);
+                infoWave.add(mi2ToolsTable);
             }).left().top();
 
 
