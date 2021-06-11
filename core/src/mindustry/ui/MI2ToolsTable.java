@@ -67,11 +67,11 @@ public class MI2ToolsTable extends Table{
         row();
 
         table(t -> {
-            t.label(() -> "Wave " + (state.wave + waveOffset)).get().setFontScale(1f);
+            t.label(() -> "Wave " + (state.wave + waveOffset)).get().setFontScale(0.8f);
 
             t.button("<", () -> {
                 waveOffset -= 1;
-                if(waveOffset < 0) waveOffset = 0;
+                if(state.wave + waveOffset - 1 < 0) waveOffset = 0;
             }).maxSize(36f, 36f);
 
             t.button("○", () -> {
@@ -133,10 +133,11 @@ public class MI2ToolsTable extends Table{
 
         table(t -> {
             t.label(() -> (control.saves.getCurrent() != null ? ("Time: " + control.saves.getCurrent().getPlayTime() + "\n"):"") + 
-            "Built: " + state.stats.buildingsBuilt + 
-            "\nDeconstructed: " + state.stats.buildingsDeconstructed + 
-            "\nDestoryed: " + state.stats.buildingsDestroyed).get().setFontScale(0.6f);
-        }).left().get().setScale(0.5f);
+            "EKilled: " + state.stats.enemyUnitsDestroyed).get().setFontScale(0.6f);
+            t.label(() -> "Buily: " + state.stats.buildingsBuilt + 
+            "\nDeconst: " + state.stats.buildingsDeconstructed + 
+            "\nDestory: " + state.stats.buildingsDestroyed).get().setFontScale(0.6f);
+        }).left().get().setScale(0.4f);
 
     }
 

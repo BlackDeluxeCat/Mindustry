@@ -470,8 +470,8 @@ public class UnitType extends UnlockableContent{
 
         Draw.z(z - 0.02f);
 
-        if(mech != null && unitTrans > 0f){
-            drawMech(mech);
+        if(mech != null){
+            if(unitTrans > 0) drawMech(mech);
 
             //side
             legOffset.trns(mech.baseRotation(), 0f, Mathf.lerp(Mathf.sin(mech.walkExtend(true), 2f/Mathf.PI, 1) * mechSideSway, 0f, unit.elevation));

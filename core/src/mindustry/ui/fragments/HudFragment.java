@@ -234,7 +234,7 @@ public class HudFragment extends Fragment{
             Table wavesMain, editorMain;
 
             cont.stack(wavesMain = new Table(), editorMain = new Table()).height(wavesMain.getPrefHeight())
-            .name("waves/editor");
+            .name("waves/editor").growY().left().top();
 
             wavesMain.visible(() -> shown && !state.isEditor());
             wavesMain.top().left().name = "waves";
