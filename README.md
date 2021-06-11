@@ -48,7 +48,7 @@ _First release build will be done when Mindustry v127 is available._
 
 ## Changelog
 
-See [Changelog](core/assets/changelog.txt) (cn)
+See [Changelog](core/assets/changelog) (cn)
 
 En is not available bcus I'm lazy.
 
