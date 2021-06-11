@@ -171,6 +171,7 @@ public class MenuFragment extends Fragment{
                 //new Buttoni("@schematics", Icon.paste, ui.schematics::show),
                 new Buttoni("@settings", Icon.settings, ui.settings::show),
                 new Buttoni("@about.button", Icon.info, ui.about::show),
+                new Buttoni("@aboutmi2.button", Icon.info, ui.aboutmi2::show),
                 new Buttoni("@quit", Icon.exit, Core.app::exit)
             );
 

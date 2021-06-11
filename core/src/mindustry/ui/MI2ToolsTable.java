@@ -71,7 +71,7 @@ public class MI2ToolsTable extends Table{
 
             t.button("<<", () -> {
                 waveOffset -= 10;
-                if(state.wave + waveOffset - 1 < 0) waveOffset = 0;
+                if(state.wave + waveOffset - 1 < 0) waveOffset = -state.wave + 1;
             }).maxSize(32f, 32f);
 
             t.button("<", () -> {

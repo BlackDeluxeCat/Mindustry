@@ -70,6 +70,8 @@ public class UI implements ApplicationListener, Loadable{
     public ModsDialog mods;
     public ColorPicker picker;
     public LogicDialog logic;
+    
+    public AboutMI2Dialog aboutmi2;
 
     public Cursor drillCursor, unloadCursor;
 
@@ -188,6 +190,7 @@ public class UI implements ApplicationListener, Loadable{
         mods = new ModsDialog();
         schematics = new SchematicsDialog();
         logic = new LogicDialog();
+        aboutmi2 = new AboutMI2Dialog();
 
         Group group = Core.scene.root;
 
