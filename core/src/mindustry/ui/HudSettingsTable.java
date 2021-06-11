@@ -1,8 +1,9 @@
 package mindustry.ui;
 
 import arc.struct.Seq;
-import mindustry.gen.Tex;
+import arc.Core;
 import arc.func.Boolc;
+import arc.scene.Element;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
 
@@ -32,6 +33,7 @@ public class HudSettingsTable extends Table{
             list.clear();
             row();
 
+            Table sets = new Table();
             checkPref("effects", true);
             sliderPref("effectScl",100,0,100,1, i -> i + "%");
             checkPref("bloom", true, val -> renderer.toggleBloom(val));
@@ -47,11 +49,26 @@ public class HudSettingsTable extends Table{
             sliderPref("unitLegTransparency",100,0,100,1, i -> i + "%");
             checkPref("keepPanViewInMove", true);
             
-            table(Tex.button, t -> {
-                for(Setting setting : list){
-                    setting.add(t);
+            for(Setting setting : list){
+                setting.add(sets);
+            }
+
+            ScrollPane pane = pane(sp -> {
+                sp.background(Styles.black3);
+                sp.add(sets);
+                return;
+            }).maxSize(800f,300f).get();
+
+            pane.update(() -> {
+                Element e = Core.scene.hit(Core.input.mouseX(), Core.input.mouseY(), true);
+                if(e != null && e.isDescendantOf(pane)){
+                    pane.requestScroll();
+                }else if(pane.hasScroll()){
+                    Core.scene.setScrollFocus(null);
                 }
             });
+
+
         }
 
     }

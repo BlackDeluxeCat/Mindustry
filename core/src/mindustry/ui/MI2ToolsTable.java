@@ -25,22 +25,32 @@ public class MI2ToolsTable extends Table{
         clear();
         left();
 
-        table(t -> {
-            t.label(() -> "" + Iconc.statusBurning).get().setColor((state.rules.fire?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-            t.label(() -> "" + Iconc.itemBlastCompound).get().setColor((state.rules.damageExplosions?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-            t.label(() -> "" + Iconc.blockThoriumReactor).get().setColor((state.rules.reactorExplosions?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-            t.label(() -> "" + Iconc.itemCopper).get().setColor((state.rules.unitAmmo?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-            t.label(() -> "" + Iconc.blockMicroProcessor).get().setColor((state.rules.logicUnitBuild?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-            t.label(() -> "" + Iconc.blockCoreShard).get().setColor((state.rules.unitCapVariable?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-            t.label(() -> "bUCap:" + state.rules.unitCap).colspan(2).get().setFontScale(0.6f);
-            t.row();
-
-            t.label(() -> "" + Iconc.blockIlluminator).get().setColor((state.rules.lighting?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-            t.label(() -> "" + Iconc.blockIncinerator).get().setColor((state.rules.coreIncinerates?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-            t.label(() -> "" + Iconc.paste).get().setColor((state.rules.schematicsAllowed?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
-            t.label(() -> world != null ? (world.width() + "x" + world.height()):"ohno").colspan(3).get().setFontScale(0.6f);
-            t.add("MI2").get().setFontScale(0.6f);
-            t.add("a19").get().setFontScale(0.6f);
+        table(line1 -> {
+            line1.table(t -> {
+                t.label(() -> "" + Iconc.statusBurning).get().setColor((state.rules.fire?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                t.label(() -> "" + Iconc.itemBlastCompound).get().setColor((state.rules.damageExplosions?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                t.label(() -> "" + Iconc.blockThoriumReactor).get().setColor((state.rules.reactorExplosions?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                t.label(() -> "" + Iconc.itemCopper).get().setColor((state.rules.unitAmmo?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                t.label(() -> "" + Iconc.blockMicroProcessor).get().setColor((state.rules.logicUnitBuild?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                t.label(() -> "" + Iconc.blockCoreShard).get().setColor((state.rules.unitCapVariable?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                t.label(() -> "bUCap:" + state.rules.unitCap).colspan(2).get().setFontScale(0.6f);
+                t.row();
+    
+                t.label(() -> "" + Iconc.blockIlluminator).get().setColor((state.rules.lighting?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                t.label(() -> "" + Iconc.blockIncinerator).get().setColor((state.rules.coreIncinerates?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                t.label(() -> "" + Iconc.paste).get().setColor((state.rules.schematicsAllowed?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
+                t.label(() -> world != null ? (world.width() + "x" + world.height()):"ohno").colspan(3).get().setFontScale(0.6f);
+                t.add("MI2").get().setFontScale(0.6f);
+                t.add("a19").get().setFontScale(0.6f);
+            }).left();
+    
+            line1.table(t -> {
+                t.label(() -> (control.saves.getCurrent() != null ? ("Time: " + control.saves.getCurrent().getPlayTime() + "\n"):"") + 
+                "EKilled: " + state.stats.enemyUnitsDestroyed).pad(5f).get().setFontScale(0.6f);
+                t.label(() -> "Build: " + state.stats.buildingsBuilt + 
+                "\nDeconst: " + state.stats.buildingsDeconstructed + 
+                "\nDestory: " + state.stats.buildingsDestroyed).pad(5f).get().setFontScale(0.6f);
+            }).left();
         }).left();
 
         row();
@@ -76,7 +86,7 @@ public class MI2ToolsTable extends Table{
 
             t.button("<", () -> {
                 waveOffset -= 1;
-                if(state.wave + waveOffset - 1 < 0) waveOffset = 0;
+                if(state.wave + waveOffset - 1 < 0) waveOffset = -state.wave + 1;
             }).maxSize(32f, 32f);
 
             t.button("O", () -> {
@@ -137,16 +147,6 @@ public class MI2ToolsTable extends Table{
             }).maxSize(40f, 40f);
 
         }).left();
-
-        row();
-
-        table(t -> {
-            t.label(() -> (control.saves.getCurrent() != null ? ("Time: " + control.saves.getCurrent().getPlayTime() + "\n"):"") + 
-            "EKilled: " + state.stats.enemyUnitsDestroyed).get().setFontScale(0.6f);
-            t.label(() -> "Buily: " + state.stats.buildingsBuilt + 
-            "\nDeconst: " + state.stats.buildingsDeconstructed + 
-            "\nDestory: " + state.stats.buildingsDestroyed).get().setFontScale(0.6f);
-        }).left().get().setScale(0.4f);
 
     }
 
