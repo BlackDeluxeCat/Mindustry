@@ -429,9 +429,11 @@ public class Vars implements Loadable{
             }
         }
     }
+
     public static int getMaxSchematicSize(){
         return  settings.getInt("cheat.maxSchematicSize",maxSchematicSize);
     }
+
     public static int getMinimapSize(){
         return settings.getInt("minimapSize",minimapSize);
     }

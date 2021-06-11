@@ -132,8 +132,8 @@ public class MI2ToolsTable extends Table{
         row();
 
         table(t -> {
-            t.label(() -> "Time: " + state.stats.timeLasted + 
-            "\nBuilt: " + state.stats.buildingsBuilt + 
+            t.label(() -> (control.saves.getCurrent() != null ? ("Time: " + control.saves.getCurrent().getPlayTime() + "\n"):"") + 
+            "Built: " + state.stats.buildingsBuilt + 
             "\nDeconstructed: " + state.stats.buildingsDeconstructed + 
             "\nDestoryed: " + state.stats.buildingsDestroyed).get().setFontScale(0.6f);
         }).left().get().setScale(0.5f);
