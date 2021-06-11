@@ -44,6 +44,7 @@ public class HudFragment extends Fragment{
     private CoreItemsDisplay coreItems = new CoreItemsDisplay();
     private OtherCoreItemDisplay otherCoreItemDisplay = new OtherCoreItemDisplay(); //shugen002's display
     private MI2ToolsTable mi2ToolsTable = new MI2ToolsTable();
+    private HudSettingsTable hudSettingsTable = new HudSettingsTable();
 
     private String hudText = "";
     private boolean showHudText;
@@ -106,54 +107,35 @@ public class HudFragment extends Fragment{
         });
 
         //minimap + position
-        parent.fill(t -> {
-            t.name = "minimap/position";
-            t.visible(() -> Core.settings.getBool("minimap") && shown);
-            //minimap
-            t.add(new Minimap()).name("minimap");
-            t.row();
-            //position
-            t.label(() -> player.tileX() + "," + player.tileY())
-            .visible(() -> Core.settings.getBool("position"))
-            .touchable(Touchable.disabled)
-            .name("position");
-            t.row();
-            t.label(() -> {
-            Vec2 pos = Core.input.mouseWorld(Core.input.mouseX(), Core.input.mouseY());
-            return World.toTile(pos.x) + "," + World.toTile(pos.y);
-            });
-            t.top().right();
-        });
-
-        if(Core.settings.getBool("showFloatingSettings")){
-            parent.fill(t -> {
-                t.name = "floating settings";
-                FloatingSettings settings = new FloatingSettings();
-                settings.sliderPref("minimapUnitTeamColorTransparency",100,0,100,1, i -> i + "%");
-                settings.checkPref("unitHealthBar", true);
-                settings.checkPref("unitPathLine", true);
-                settings.checkPref("unitLogicMoveLine", true);
-                settings.checkPref("unitWeaponTargetLine", true);
-                settings.checkPref("unitItemAmountAlwaysOn", false);
-                settings.sliderPref("unitTransparency",100,0,100,1, i -> i + "%");
-                settings.sliderPref("unitLegTransparency",100,0,100,1, i -> i + "%");
-                settings.checkPref("blockWeaponTargetLine", true);
-                settings.checkPref("keepPanViewInMove", true);
-
-                CheckBox box = new CheckBox("Quick Settings");
-                box.changed(() -> {
-                });
-                box.left();
-                t.table(Styles.black5, st1 -> st1.add(box).left());
+        parent.fill(tr -> {
+            tr.name = "minimap/position/option";
+            tr.visible(() -> shown);
+            tr.top().right();
+            tr.table(t->{
+                t.name = "minimap/position";
+                t.visible(() -> Core.settings.getBool("minimap") && shown);
+                //minimap
+                t.add(new Minimap()).name("minimap");
                 t.row();
-                Table FloatingSettings = new Table();
-                FloatingSettings.add(settings).visible(() -> box.isChecked());
-                //t.table(Styles.black5, st -> st.add(settings).visible(() -> Core.settings.getBool("showFloatingSettings"))); 
-                t.add(FloatingSettings);
+                //position
+                t.label(() -> player.tileX() + "," + player.tileY())
+                .visible(() -> Core.settings.getBool("position"))
+                .touchable(Touchable.disabled)
+                .name("position");
+                t.row();
+                t.label(() -> {
+                Vec2 pos = Core.input.mouseWorld(Core.input.mouseX(), Core.input.mouseY());
+                return World.toTile(pos.x) + "," + World.toTile(pos.y);
+                });
                 t.top().right();
-            });
-        }
-
+            }).right();
+            tr.row();
+            //setting
+            tr.table(tset -> {
+                tset.add(hudSettingsTable);
+                tset.right().top().visible(() -> Core.settings.getBool("showFloatingSettings"));
+            }).fillX();
+        });
 
         ui.hints.build(parent);
 

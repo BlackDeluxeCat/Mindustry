@@ -1,26 +1,59 @@
-package arc.scene.ui;
+package mindustry.ui;
 
 import arc.struct.Seq;
+import mindustry.gen.Tex;
 import arc.func.Boolc;
-import arc.func.Cons;
 import arc.scene.ui.*;
-import arc.scene.ui.layout.Table;
-import arc.scene.ui.layout.Scl;
+import arc.scene.ui.layout.*;
 
+import static mindustry.Vars.*;
 import static arc.Core.bundle;
 import static arc.Core.settings;
 
-public class FloatingSettings extends Table{
+public class HudSettingsTable extends Table{
     protected Seq<Setting> list = new Seq<>();
-    protected Cons<FloatingSettings> rebuilt;
+    private boolean expandList = false;
 
-    public FloatingSettings(){
+    public HudSettingsTable(){
+        rebuild();
         right();
     }
 
-    public FloatingSettings(Cons<FloatingSettings> rebuilt){
-        this.rebuilt = rebuilt;
-        right();
+    void rebuild(){
+        clearChildren();
+
+
+        button("Options", () -> {
+            expandList = !expandList;
+            rebuild();
+        }).minSize(140f, 30f);
+        
+        if(expandList){
+            list.clear();
+            row();
+
+            checkPref("effects", true);
+            sliderPref("effectScl",100,0,100,1, i -> i + "%");
+            checkPref("bloom", true, val -> renderer.toggleBloom(val));
+            sliderPref("minimapUnitTeamColorTransparency",100,0,100,1, i -> i + "%");
+            checkPref("blockBars", true);
+            checkPref("blockWeaponRange", true);
+            checkPref("blockWeaponTargetLine", true);
+            checkPref("unitHealthBar", true);
+            checkPref("unitPathLine", true);
+            checkPref("unitLogicMoveLine", true);
+            checkPref("unitWeaponTargetLine", true);
+            sliderPref("unitTransparency",100,0,100,1, i -> i + "%");
+            sliderPref("unitLegTransparency",100,0,100,1, i -> i + "%");
+            checkPref("keepPanViewInMove", true);
+            
+            table(Tex.button, t -> {
+                for(Setting setting : list){
+                    setting.add(t);
+                }
+            });
+        }
+
     }
 
     public interface StringProcessor{
@@ -48,7 +81,6 @@ public class FloatingSettings extends Table{
         SliderSettingF res;
         list.add(res = new SliderSettingF(name, title, def, min, max, step, s));
         settings.defaults(name, def);
-        rebuild();
         return res;
     }
 
@@ -60,51 +92,36 @@ public class FloatingSettings extends Table{
         SliderSettingF res;
         list.add(res = new SliderSettingF(name, bundle.get("setting." + name + ".name"), def, min, max, step, s));
         settings.defaults(name, def);
-        rebuild();
         return res;
     }
 
     public void checkPref(String name, String title, boolean def){
         list.add(new CheckSettingF(name, title, def, null));
         settings.defaults(name, def);
-        rebuild();
     }
 
     public void checkPref(String name, String title, boolean def, Boolc changed){
         list.add(new CheckSettingF(name, title, def, changed));
         settings.defaults(name, def);
-        rebuild();
     }
 
     /** Localized title. */
     public void checkPref(String name, boolean def){
         list.add(new CheckSettingF(name, bundle.get("setting." + name + ".name"), def, null));
         settings.defaults(name, def);
-        rebuild();
     }
 
     /** Localized title. */
     public void checkPref(String name, boolean def, Boolc changed){
         list.add(new CheckSettingF(name, bundle.get("setting." + name + ".name"), def, changed));
         settings.defaults(name, def);
-        rebuild();
-    }
-
-    void rebuild(){
-        clearChildren();
-
-        for(Setting setting : list){
-            setting.add(this, 1f);
-        }
-
-        if(rebuilt != null) rebuilt.get(this);
     }
 
     public abstract static class Setting{
         public String name;
         public String title;
 
-        public abstract void add(FloatingSettings table, float scale);
+        public abstract void add(Table table);
     }
 
     public static class CheckSettingF extends Setting{
@@ -119,20 +136,19 @@ public class FloatingSettings extends Table{
         }
 
         @Override
-        public void add(FloatingSettings table, float scale){
+        public void add(Table table){
             CheckBox box = new CheckBox(title);
-            box.setScale(scale);
             box.update(() -> box.setChecked(settings.getBool(name)));
 
             box.changed(() -> {
-                settings.put(name, box.isChecked);
+                settings.put(name, box.isChecked());
                 if(changed != null){
-                    changed.get(box.isChecked);
+                    changed.get(box.isChecked());
                 }
             });
 
             box.left();
-            table.add(box).left().padTop(1f);
+            table.add(box).left().padTop(0.5f);
             table.row();
         }
     }
@@ -156,17 +172,15 @@ public class FloatingSettings extends Table{
         }
 
         @Override
-        public void add(FloatingSettings table, float scale){
+        public void add(Table table){
             Slider slider = new Slider(min, max, step, false);
 
             slider.setValue(settings.getInt(name));
-            slider.setScale(scale);
             if(values != null){
                 slider.setSnapToValues(values, 1f);
             }
 
             Label label = new Label(title);
-            label.setScale(scale);
 
             slider.changed(() -> {
                 settings.put(name, (int)slider.getValue());

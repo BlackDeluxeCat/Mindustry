@@ -67,20 +67,29 @@ public class MI2ToolsTable extends Table{
         row();
 
         table(t -> {
-            t.label(() -> "Wave " + (state.wave + waveOffset)).get().setFontScale(0.8f);
+            t.label(() -> "Wave " + (state.wave + waveOffset)).get().setFontScale(0.6f);
+
+            t.button("<<", () -> {
+                waveOffset -= 10;
+                if(state.wave + waveOffset - 1 < 0) waveOffset = 0;
+            }).maxSize(32f, 32f);
 
             t.button("<", () -> {
                 waveOffset -= 1;
                 if(state.wave + waveOffset - 1 < 0) waveOffset = 0;
-            }).maxSize(36f, 36f);
+            }).maxSize(32f, 32f);
 
-            t.button("○", () -> {
+            t.button("O", () -> {
                 waveOffset = 0;
-            }).maxSize(36f, 36f);
+            }).maxSize(32f, 32f);
 
             t.button(">", () -> {
                 waveOffset += 1;
-            }).maxSize(36f, 36f);
+            }).maxSize(32f, 32f);
+
+            t.button(">>", () -> {
+                waveOffset += 10;
+            }).maxSize(32f, 32f);
         }).left();
 
         row();
