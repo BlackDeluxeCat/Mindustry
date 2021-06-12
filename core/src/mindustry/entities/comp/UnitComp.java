@@ -431,7 +431,7 @@ abstract class UnitComp implements Healthc, Physicsc, Hitboxc, Statusc, Teamc, I
 
         float shake = hitSize / 3f;
 
-        Effect.scorch(x, y, (int)(hitSize / 5));
+        if(!Core.settings.getBool("disableWreck", false)) Effect.scorch(x, y, (int)(hitSize / 5));
         Fx.explosion.at(this);
         Effect.shake(shake, shake, this);
         type.deathSound.at(this);
