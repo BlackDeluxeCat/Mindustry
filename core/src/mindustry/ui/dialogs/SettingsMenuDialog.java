@@ -460,6 +460,11 @@ public class SettingsMenuDialog extends SettingsDialog{
         
         graphics.sliderPref("minimapSize", 140, 40, 400, 10, i -> i + "");
         graphics.sliderPref("minimapUnitTeamColorTransparency",100,0,100,1, i -> i + "%");
+
+        graphics.row();
+        graphics.add("Unit");
+        graphics.row();
+
         graphics.checkPref("unitHealthBar", true);
         graphics.checkPref("unitPathLine", true);
         graphics.sliderPref("unitPathLineLength", 64, 0, 512, 1, i -> i + "Tiles");
@@ -471,6 +476,12 @@ public class SettingsMenuDialog extends SettingsDialog{
         graphics.checkPref("unitItemAmountAlwaysOn", false);
         graphics.sliderPref("unitTransparency",100,0,100,1, i -> i + "%");
         graphics.sliderPref("unitLegTransparency",100,0,100,1, i -> i + "%");
+        graphics.checkPref("disableWreck", false);
+
+        graphics.row();
+        graphics.add("Block");
+        graphics.row();
+
         graphics.checkPref("blockBars", true);
         graphics.checkPref("blockWeaponRange", true);
         graphics.checkPref("blockWeaponTargetLine", true);

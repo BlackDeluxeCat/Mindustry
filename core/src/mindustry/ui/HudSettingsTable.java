@@ -22,31 +22,30 @@ public class HudSettingsTable extends Table{
 
     void rebuild(){
         clearChildren();
-
-
-        button("Options", () -> {
-            expandList = !expandList;
-            rebuild();
-        }).minSize(140f, 30f);
         
         if(expandList){
             list.clear();
-            row();
 
             Table sets = new Table();
             checkPref("effects", true);
             sliderPref("effectScl",100,0,100,1, i -> i + "%");
             checkPref("bloom", true, val -> renderer.toggleBloom(val));
             sliderPref("minimapUnitTeamColorTransparency",100,0,100,1, i -> i + "%");
-            checkPref("blockBars", true);
-            checkPref("blockWeaponRange", true);
-            checkPref("blockWeaponTargetLine", true);
+
             checkPref("unitHealthBar", true);
             checkPref("unitPathLine", true);
             checkPref("unitLogicMoveLine", true);
             checkPref("unitWeaponTargetLine", true);
+            checkPref("unitItemAmountAlwaysOn", false);
             sliderPref("unitTransparency",100,0,100,1, i -> i + "%");
             sliderPref("unitLegTransparency",100,0,100,1, i -> i + "%");
+            checkPref("disableWreck", false);
+
+            checkPref("blockBars", true);
+            checkPref("blockWeaponRange", true);
+            checkPref("blockWeaponTargetLine", true);
+            checkPref("blockBridgeItem", true);
+
             checkPref("keepPanViewInMove", true);
             
             for(Setting setting : list){
@@ -54,7 +53,7 @@ public class HudSettingsTable extends Table{
             }
 
             ScrollPane pane = pane(sp -> {
-                sp.background(Styles.black3);
+                sp.background(Styles.black6);
                 sp.add(sets);
                 return;
             }).maxSize(800f,300f).get();
@@ -67,9 +66,12 @@ public class HudSettingsTable extends Table{
                     Core.scene.setScrollFocus(null);
                 }
             });
-
-
         }
+
+        button("<\nO\np\nt\ni\no\nn\ns\n<", () -> {
+            expandList = !expandList;
+            rebuild();
+        }).width(32f).fillY();
 
     }
 
