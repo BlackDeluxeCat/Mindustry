@@ -267,9 +267,9 @@ public class HudFragment extends Fragment{
             editorMain.visible(() -> shown && state.isEditor());
 
             //map info/nextwave display
-            cont.table(Tex.button, infoWave -> {
+            cont.table(infoWave -> {
                 infoWave.name = "map/wave";
-                infoWave.left().top().margin(3).visible(() -> shown);
+                infoWave.left().top().visible(() -> shown);
                 infoWave.add(mi2ToolsTable);
             }).left().top();
 
