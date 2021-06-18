@@ -21,7 +21,7 @@ public class MI2ToolsTable extends Table{
         rebuild();
     }
 
-    void rebuild(){
+    public void rebuild(){
         clear();
         left();
         button("<\nM\nI\n2\n \nT\no\no\nl\ns\n<", () -> {

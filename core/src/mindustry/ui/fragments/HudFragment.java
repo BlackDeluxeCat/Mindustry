@@ -96,6 +96,7 @@ public class HudFragment extends Fragment{
 
         Events.on(WorldLoadEvent.class,e->{
             otherCoreItemDisplay.updateTeamList();
+            mi2ToolsTable.rebuild();
             startTime = Time.timeSinceMillis(0);
         });
 
