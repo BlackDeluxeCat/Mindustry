@@ -4,9 +4,12 @@
 
 Mainly modify vanilla display and UI.
 
-**由于kimi违背本仓库要求传播了自行编译端，深深地伤害了作者的心（迫真，本仓库随时弃坑**
+**kimi违背本仓库要求（传播了自行编译端），严重影响了作者的热情。作者决定放弃更新本仓库，已有代码将保留，126.2最终编译版本已公开于蓝奏云。**127及以后的最新跟进版本仅在学术交流群内部分享
 
-并且我懒了，127以后请进学术交流群获得
+[蓝奏云链接[Windows/Android]](https://wwr.lanzoui.com/b02c69sha)
+密码:crvz
+
+请避免作为新人入门端使用，祝游玩愉快。
 
 ## Update & Release
 
@@ -16,9 +19,9 @@ Mainly modify vanilla display and UI.
 
 ~~_第一个release预计在v127后发布。_~~
 
-~~Compile the lastest alpha build on your own, may with many potential bugs. ~~
+~~Compile the lastest alpha build on your own, may with many potential bugs.~~
 
-~~Release build follows the tag in origin repositoriy. Its new features has been tested for times and should be much more stable. ~~
+~~Release build follows the tag in origin repositoriy. Its new features has been tested for times and should be much more stable.~~
 
 ~~_First release build will be done when Mindustry v127 is available._~~
 
