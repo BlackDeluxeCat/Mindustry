@@ -48,7 +48,7 @@ public class MI2ToolsTable extends Table{
                         t.label(() -> "" + Iconc.paste).get().setColor((state.rules.schematicsAllowed?new Color(1f,1f,1f):new Color(1f,0.3f,0.3f,0.5f)));
                         t.label(() -> world != null ? (world.width() + "x" + world.height()):"ohno").colspan(3).get().setFontScale(fontScl);
                         t.add("MI2").get().setFontScale(fontScl);
-                        t.add("a19").get().setFontScale(fontScl);
+                        t.add("a20").get().setFontScale(fontScl);
                     }).left();
             
                     line1.table(t -> {
