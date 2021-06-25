@@ -4,14 +4,14 @@
 
 Mainly modify vanilla display and UI.
 
-**kimi违背本仓库要求（传播了自行编译端），严重影响了作者的热情。作者决定放弃更新本仓库，已有代码将保留，126.2最终编译版本已公开于蓝奏云。**
+**kimi违背本仓库要求（传播了自行编译端），严重影响了作者的热情。决定放弃更新本仓库，已有代码保留供参考，126.2最终编译版本已公开于蓝奏云。**
 
-127及以后的最新跟进版本仅在学术交流群内部分享
+本端仅是作者练习jvav（笑）的产物之一，已基本完成作者喜好的功能，127及以后的跟进版本仅在学术交流群进行测试。如果你有意有能力基于本端开发新功能，遵守[协议](https://github.com/BlackDeluxeCat/Mindustry/blob/master/LICENSE)自取便是。
 
-[蓝奏云链接[Windows/Android]](https://wwr.lanzoui.com/b02c69sha)
+[126.2蓝奏云链接[Windows/Android]](https://wwr.lanzoui.com/b02c69sha)
 密码:crvz
 
-请避免作为新人入门端使用，祝游玩愉快。
+请避免作为新人入门端使用，祝游玩愉快。安卓端未做界面适应，谨慎使用。
 
 ## Update & Release
 
