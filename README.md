@@ -4,9 +4,9 @@
 
 Mainly modify vanilla display and UI.
 
-**kimi违背本仓库要求（传播了自行编译端），严重影响了作者的热情。决定放弃更新本仓库，已有代码保留供参考，126.2最终编译版本已公开于蓝奏云。**
+**作者放弃更新本仓库，已有代码保留供参考，126.2最终编译版本已公开于蓝奏云。**
 
-本端仅是作者练习jvav（笑）的产物之一，已基本完成作者喜好的功能，127及以后的跟进版本仅在学术交流群进行测试。如果你有意有能力基于本端开发新功能，遵守[协议](https://github.com/BlackDeluxeCat/Mindustry/blob/master/LICENSE)自取便是。
+某（前）辅助kimi违背本仓库要求（传播了自行编译端），挺让人失望的。不过MI2端也就一个练习jvav（笑）项目的产物，已基本完成作者喜好的功能。综合各种因素我决定弃坑了，学习自己搓游戏力。如果你有意有能力基于本端开发新功能，遵守[协议](https://github.com/BlackDeluxeCat/Mindustry/blob/master/LICENSE)自取便是。
 
 [126.2蓝奏云链接[Windows/Android]](https://wwr.lanzoui.com/b02c69sha)
 密码:crvz
